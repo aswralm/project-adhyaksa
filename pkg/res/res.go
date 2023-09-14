@@ -33,6 +33,7 @@ func JSON(success bool, message string, dataOrError interface{}, args ...interfa
 	}
 	if success {
 		// Set links and meta if exists
+		// this comment from gitlab
 		var links interface{}
 		var meta interface{}
 		if len(args) > 0 {
