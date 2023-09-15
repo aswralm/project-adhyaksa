@@ -74,7 +74,7 @@ func TestEventEntity(t *testing.T) {
 			event, err := entity.NewEvent(test.dto)
 
 			if !test.isError {
-				assert.NotNil(t, event.ID)
+				assert.NotNil(t, event.GetID())
 				assert.Equal(t, test.expected.Name, event.GetName())
 				assert.Equal(t, test.expected.StartTime, event.GetStartTime())
 				assert.Equal(t, test.expected.EndTime, event.GetEndTime())

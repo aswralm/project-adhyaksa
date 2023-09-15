@@ -9,14 +9,16 @@ import (
 )
 
 type Event struct {
-	ID          string
+	id          string
+	adminID     string
 	name        string
 	startTime   *time.Time
 	endTime     *time.Time
 	location    string
 	description string
 
-	organizer *Branch
+	//relations
+	branch *Branch
 }
 
 type EventDTO struct {
@@ -37,23 +39,23 @@ func NewEvent(event EventDTO) (*Event, error) {
 	}
 
 	return &Event{
-		ID:          event.ID,
+		id:          event.ID,
 		name:        event.Name,
 		startTime:   event.StartTime,
 		endTime:     event.EndTime,
 		location:    event.Location,
 		description: event.Description,
-		organizer:   event.organizer,
+		branch:      event.organizer,
 	}, nil
 }
 
 // getter & setter for entity
 func (e Event) SetID() {
-	e.ID = uuid.New().String()
+	e.id = uuid.New().String()
 }
 
 func (e *Event) GetID() string {
-	return e.ID
+	return e.id
 }
 
 func (e Event) SetName(name string) {
