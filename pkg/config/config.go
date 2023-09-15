@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -26,8 +27,8 @@ type DBQ struct {
 	CustomTime string `env:"CUSTOM_TIMEOUT"`
 }
 
-func NewConfig() (*Config, error) {
-	if err := godotenv.Load(".env"); err != nil {
+func NewConfig(path string) (*Config, error) {
+	if err := godotenv.Load(fmt.Sprintf("%v/.env", path)); err != nil {
 		log.Fatal("Config error : ", err)
 	}
 

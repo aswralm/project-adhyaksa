@@ -1,1 +1,10 @@
 go.sum
+
+#tim3
+services/event/.env
+
+#log
+*.log
+
+#vendoring
+vendor
