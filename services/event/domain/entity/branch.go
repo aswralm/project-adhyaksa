@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+
 	"github.com/google/uuid"
 )
 
@@ -18,7 +19,7 @@ type BranchDTO struct {
 
 // mapping for DTO to Entity
 func NewBranch(branch BranchDTO) (*Branch, error) {
-	if branch.ID == "" || branch.Name == "" || branch.Address == "" {
+	if branch.ID == "" {
 		return nil, errors.New("ERROR_FIELD_ENTITY")
 	}
 
