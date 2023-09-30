@@ -29,12 +29,13 @@ type EventDTO struct {
 	Location    string
 	Description string
 
-	organizer *Branch
+	Organizer *Branch
 }
 
 // mapping for DTO to Entity
 func NewEvent(event EventDTO) (*Event, error) {
-	if event.ID == "" || event.Name == "" || event.StartTime == nil || event.EndTime == nil || event.Location == "" || event.Description == "" {
+
+	if event.Name == "" || event.StartTime == nil || event.EndTime == nil || event.Location == "" || event.Description == "" {
 		return nil, errors.New(customerror.ERROR_FIELD_ENTITY)
 	}
 
@@ -45,7 +46,7 @@ func NewEvent(event EventDTO) (*Event, error) {
 		endTime:     event.EndTime,
 		location:    event.Location,
 		description: event.Description,
-		branch:      event.organizer,
+		branch:      event.Organizer,
 	}, nil
 }
 
@@ -96,4 +97,20 @@ func (e Event) SetDescription(description string) {
 
 func (e *Event) GetDescription() string {
 	return e.description
+}
+
+func (e *Event) GetAdminID() string {
+	return e.adminID
+}
+
+func (e *Event) SetAdminID(adminID string) {
+	e.adminID = adminID
+}
+
+func (e *Event) GetBranch() *Branch {
+	return e.branch
+}
+
+func (e *Event) SetBranch(branch Branch) {
+	e.branch = &branch
 }
