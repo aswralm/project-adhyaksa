@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+	"project-adhyaksa/services/event/internal/customerror"
 
 	"github.com/google/uuid"
 )
@@ -20,7 +21,7 @@ type BranchDTO struct {
 // mapping for DTO to Entity
 func NewBranch(branch BranchDTO) (*Branch, error) {
 	if branch.ID == "" {
-		return nil, errors.New("ERROR_FIELD_ENTITY")
+		return nil, errors.New(customerror.ERROR_FIELD_ENTITY)
 	}
 
 	return &Branch{
