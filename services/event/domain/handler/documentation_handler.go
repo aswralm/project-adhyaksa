@@ -1,0 +1,7 @@
+package handler
+
+import "github.com/gin-gonic/gin"
+
+type DocumentationHandler interface {
+	RegisterDocumentation(ctx *gin.Context)
+}

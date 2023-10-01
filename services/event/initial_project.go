@@ -9,12 +9,14 @@ import (
 	"project-adhyaksa/pkg/database"
 	"project-adhyaksa/pkg/httpserver"
 	"project-adhyaksa/pkg/logger"
+	"project-adhyaksa/pkg/upload"
 	v1 "project-adhyaksa/services/event/internal"
 	"project-adhyaksa/services/event/internal/repository"
 	"project-adhyaksa/services/event/internal/service"
 	"project-adhyaksa/services/event/internal/usecase"
 	"syscall"
 
+	"github.com/cloudinary/cloudinary-go"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"go.uber.org/zap"
@@ -40,15 +42,24 @@ func NewProject() {
 
 	//setup handler
 	handler := gin.New()
+
 	//allow cors
 	handler.Use(cors.AllowAll())
+
 	//start server
 	httpServer := httpserver.New(handler, httpserver.Port(config.Port))
 	log.Println("server is running on port:", config.Port)
 
+	//create cloudinary instance
+	cld, err := cloudinary.NewFromParams(config.Cloudinary.CloudName, config.Cloudinary.ApiKey, config.Cloudinary.ApiScret)
+	if err != nil {
+		log.Fatal("cloudinary error: ", err)
+	}
+
 	//dependency injection
+	uploadCloudinary := upload.NewCloudinaryUpload(cld)
 	repository := repository.InitRepository(db, config)
-	service := service.InitService(repository)
+	service := service.InitService(repository, uploadCloudinary)
 	usecase := usecase.InitUseCase(service)
 	v1.NewEvent(handler, usecase)
 

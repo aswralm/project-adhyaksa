@@ -32,7 +32,7 @@ func NewBranch(branch BranchDTO) (*Branch, error) {
 }
 
 // getter & setter for entity
-func (b Branch) SetID() {
+func (b *Branch) SetID() {
 	b.id = uuid.New().String()
 }
 
@@ -40,7 +40,7 @@ func (b *Branch) GetID() string {
 	return b.id
 }
 
-func (b Branch) SetName(name string) {
+func (b *Branch) SetName(name string) {
 	b.name = name
 }
 
@@ -48,7 +48,7 @@ func (b *Branch) GetName() string {
 	return b.name
 }
 
-func (b Branch) SetAddress(address string) {
+func (b *Branch) SetAddress(address string) {
 	b.address = address
 }
 

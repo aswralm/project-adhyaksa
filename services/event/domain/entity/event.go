@@ -51,7 +51,7 @@ func NewEvent(event EventDTO) (*Event, error) {
 }
 
 // getter & setter for entity
-func (e Event) SetID() {
+func (e *Event) SetID() {
 	e.id = uuid.New().String()
 }
 
@@ -59,7 +59,7 @@ func (e *Event) GetID() string {
 	return e.id
 }
 
-func (e Event) SetName(name string) {
+func (e *Event) SetName(name string) {
 	e.name = name
 }
 
@@ -67,7 +67,7 @@ func (e *Event) GetName() string {
 	return e.name
 }
 
-func (e Event) SetStartTime(startTime *time.Time) {
+func (e *Event) SetStartTime(startTime *time.Time) {
 	e.startTime = startTime
 }
 
@@ -75,7 +75,7 @@ func (e *Event) GetStartTime() *time.Time {
 	return e.startTime
 }
 
-func (e Event) SetEndTime(endTime *time.Time) {
+func (e *Event) SetEndTime(endTime *time.Time) {
 	e.endTime = endTime
 }
 
@@ -83,7 +83,7 @@ func (e *Event) GetEndTime() *time.Time {
 	return e.endTime
 }
 
-func (e Event) SetLocation(location string) {
+func (e *Event) SetLocation(location string) {
 	e.location = location
 }
 
@@ -91,7 +91,7 @@ func (e *Event) GetLocation() string {
 	return e.location
 }
 
-func (e Event) SetDescription(description string) {
+func (e *Event) SetDescription(description string) {
 	e.description = description
 }
 
