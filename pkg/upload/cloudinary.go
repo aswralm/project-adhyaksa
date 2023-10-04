@@ -5,21 +5,21 @@ import (
 	"mime/multipart"
 	"project-adhyaksa/pkg/config"
 
-	"github.com/cloudinary/cloudinary-go"
-	"github.com/cloudinary/cloudinary-go/api/uploader"
+	"github.com/cloudinary/cloudinary-go/v2"
+	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 	"go.uber.org/zap"
 )
 
 type cloudinaryUpload struct {
 	Cloudinary *cloudinary.Cloudinary
-	config     config.Config
+	config     *config.Config
 }
 
-func NewCloudinaryUpload(Cloudinary *cloudinary.Cloudinary) Upload {
-	return &cloudinaryUpload{Cloudinary: Cloudinary}
+func NewCloudinaryUpload(Cloudinary *cloudinary.Cloudinary, config *config.Config) Upload {
+	return &cloudinaryUpload{Cloudinary: Cloudinary, config: config}
 }
 
-func (c *cloudinaryUpload) UploadImage(ctx context.Context, file *multipart.File) (url, publicID string, err error) {
+func (c *cloudinaryUpload) UploadImage(ctx context.Context, file multipart.File) (url, publicID string, err error) {
 
 	uploadParam, err := c.Cloudinary.Upload.Upload(ctx, file, uploader.UploadParams{Folder: c.config.Cloudinary.Folder})
 	if err != nil {

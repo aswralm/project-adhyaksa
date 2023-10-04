@@ -31,6 +31,7 @@ func (m *Documentation) New(documentation entity.Documentation) *Documentation {
 		Name:        documentation.GetName(),
 		Date:        documentation.GetDate(),
 		Location:    documentation.GetLocation(),
+		Description: documentation.GetDescription(),
 		Participant: documentation.GetParticipant(),
 	}
 }

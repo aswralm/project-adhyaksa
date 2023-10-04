@@ -28,6 +28,7 @@ func (c *eventHandler) RegisterEvent(ctx *gin.Context) {
 		eventRequest  request.RegisterEventRequest
 		errorMessages = make(map[string]string)
 	)
+	//validate token
 
 	// Validate request
 	if err := ctx.ShouldBind(&eventRequest); err != nil {
@@ -46,7 +47,7 @@ func (c *eventHandler) RegisterEvent(ctx *gin.Context) {
 	if len(errorMessages) > 0 {
 		ctx.JSON(
 			http.StatusUnprocessableEntity,
-			res.JSON(false, "Failed to register item", &customerror.Err{
+			res.JSON(false, "Failed to register event", &customerror.Err{
 				Code:   customerror.ERROR_INVALID_REQUEST,
 				Errors: errorMessages,
 			}),
@@ -68,13 +69,13 @@ func (c *eventHandler) RegisterEvent(ctx *gin.Context) {
 		Description: eventRequest.Description,
 	}
 
-	//register event
+	//usecase event
 	if err := c.eventUseCase.Create(event, ctx); err != nil {
 		if eventErr, ok := err.(*customerror.Err); ok {
 			ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to register event", eventErr))
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, res.JSON(false, "Something went wrong", err.Error()))
+		ctx.JSON(http.StatusInternalServerError, res.JSON(false, "Something went wrong", nil))
 		return
 	}
 

@@ -16,12 +16,11 @@ type DocumentationServiceDTO struct {
 	PhotoURL      string
 	PhotoName     string
 	Date          *time.Time
-	Attendant     uint32
 	Location      string
 	Description   string
 	Participant   uint32
 }
 
-type DocumentatitonService interface {
-	Create(documentation DocumentationServiceDTO, file *multipart.File, ctx context.Context) error
+type DocumentationService interface {
+	Create(documentation DocumentationServiceDTO, file multipart.File, ctx context.Context) error
 }

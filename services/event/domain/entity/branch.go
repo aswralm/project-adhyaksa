@@ -3,8 +3,6 @@ package entity
 import (
 	"errors"
 	"project-adhyaksa/services/event/internal/customerror"
-
-	"github.com/google/uuid"
 )
 
 type Branch struct {
@@ -32,8 +30,8 @@ func NewBranch(branch BranchDTO) (*Branch, error) {
 }
 
 // getter & setter for entity
-func (b *Branch) SetID() {
-	b.id = uuid.New().String()
+func (b *Branch) SetID(id string) {
+	b.id = id
 }
 
 func (b *Branch) GetID() string {

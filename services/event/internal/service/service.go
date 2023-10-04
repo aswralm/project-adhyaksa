@@ -8,7 +8,7 @@ import (
 
 type Service struct {
 	EventService         service.EventService
-	DocumentationService service.DocumentatitonService
+	DocumentationService service.DocumentationService
 }
 
 func InitService(repository *repository.Repository, upload upload.Upload) *Service {

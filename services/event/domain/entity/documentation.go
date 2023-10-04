@@ -35,7 +35,7 @@ type DocumentationDTO struct {
 
 // mapping for DTO to Entity
 func NewDocumentation(documentation DocumentationDTO) (*Documentation, error) {
-	if documentation.AdminID == "" || documentation.Name == "" || documentation.Date == nil || documentation.Location == "" || documentation.Description == "" {
+	if documentation.Name == "" || documentation.Date == nil || documentation.Location == "" || documentation.Description == "" {
 		return nil, errors.New("ERROR_FIELD_ENTITY")
 	}
 
@@ -47,6 +47,7 @@ func NewDocumentation(documentation DocumentationDTO) (*Documentation, error) {
 		location:    documentation.Location,
 		description: documentation.Description,
 		participant: documentation.Participant,
+		branch:      documentation.Branch,
 	}, nil
 }
 

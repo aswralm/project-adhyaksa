@@ -27,7 +27,7 @@ type PhotoDTO struct {
 
 // mapping for DTO to Entity
 func NewPhoto(photo PhotoDTO) (*Photo, error) {
-	if photo.ID == "" || photo.URL == "" || photo.Name == "" {
+	if photo.Name == "" {
 		return nil, errors.New("ERROR_FIELD_ENTITY")
 	}
 

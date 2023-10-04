@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"mime/multipart"
 	"time"
 )
 
@@ -15,12 +16,11 @@ type DocumentationUseCaseDTO struct {
 	PhotoURL      string
 	PhotoName     string
 	Date          *time.Time
-	Attendant     uint32
 	Location      string
 	Description   string
 	Participant   uint32
 }
 
 type DocumentatitonUseCase interface {
-	Create(documentation DocumentationUseCaseDTO, ctx context.Context) error
+	Create(documentation DocumentationUseCaseDTO, file multipart.File, ctx context.Context) error
 }

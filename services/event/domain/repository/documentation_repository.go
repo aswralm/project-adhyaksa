@@ -6,5 +6,5 @@ import (
 )
 
 type DocumentationRepository interface {
-	Create(photo entity.Photo, ctx context.Context) error
+	Create(documentation entity.Documentation, photo entity.Photo, ctx context.Context) error
 }

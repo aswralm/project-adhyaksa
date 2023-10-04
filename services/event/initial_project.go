@@ -16,7 +16,7 @@ import (
 	"project-adhyaksa/services/event/internal/usecase"
 	"syscall"
 
-	"github.com/cloudinary/cloudinary-go"
+	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"go.uber.org/zap"
@@ -57,7 +57,7 @@ func NewProject() {
 	}
 
 	//dependency injection
-	uploadCloudinary := upload.NewCloudinaryUpload(cld)
+	uploadCloudinary := upload.NewCloudinaryUpload(cld, config)
 	repository := repository.InitRepository(db, config)
 	service := service.InitService(repository, uploadCloudinary)
 	usecase := usecase.InitUseCase(service)

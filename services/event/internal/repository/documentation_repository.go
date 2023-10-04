@@ -28,6 +28,7 @@ func (r *documentationRepository) transaction(fn func(tx *sql.Tx) error) error {
 	// create new db transaction
 	tx, err := r.db.Begin()
 	if err != nil {
+		zap.L().Error(err.Error())
 		return err
 	}
 
@@ -43,6 +44,7 @@ func (r *documentationRepository) transaction(fn func(tx *sql.Tx) error) error {
 	if err != nil {
 		// Rollback if we have error
 		if rbErr := tx.Rollback(); rbErr != nil {
+			zap.L().Error(err.Error())
 			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
 		}
 		return err
@@ -52,17 +54,17 @@ func (r *documentationRepository) transaction(fn func(tx *sql.Tx) error) error {
 	return tx.Commit()
 }
 
-func (r *documentationRepository) Create(photo entity.Photo, ctx context.Context) error {
+func (r *documentationRepository) Create(documentation entity.Documentation, photo entity.Photo, ctx context.Context) error {
 	var (
 		documentationModel model.Documentation
 		photoModel         model.Photo
 	)
 
-	documentationModel.New(*photo.GetDocumentation())
-	documentationModel.CreatedAt = time.Now()
+	documentationmodel := documentationModel.New(documentation)
+	documentationmodel.CreatedAt = time.Now()
 
-	photoModel.New(photo)
-	photoModel.CreatedAt = time.Now()
+	photomodel := photoModel.New(photo)
+	photomodel.CreatedAt = time.Now()
 
 	return r.transaction(func(tx *sql.Tx) error {
 		//create documentation first
@@ -72,18 +74,18 @@ func (r *documentationRepository) Create(photo entity.Photo, ctx context.Context
 		)
 
 		argsDocumentation := []interface{}{
-			documentationModel.ID,
-			documentationModel.AdminID,
-			documentationModel.BranchID,
-			documentationModel.Name,
-			documentationModel.Date,
-			documentationModel.Participant,
-			documentationModel.Location,
-			documentationModel.Description,
-			documentationModel.CreatedAt,
+			documentationmodel.ID,
+			documentationmodel.AdminID,
+			documentationmodel.BranchID,
+			documentationmodel.Name,
+			documentationmodel.Date,
+			documentationmodel.Participant,
+			documentationmodel.Location,
+			documentationmodel.Description,
+			documentationmodel.CreatedAt,
 		}
 
-		_, err := dbq.E(ctx, r.db, stmtDocumentation, nil, argsDocumentation)
+		_, err := dbq.E(ctx, tx, stmtDocumentation, nil, argsDocumentation)
 		if err != nil {
 			zap.L().Error(err.Error())
 			return err
@@ -94,15 +96,15 @@ func (r *documentationRepository) Create(photo entity.Photo, ctx context.Context
 			1,
 		)
 		argsPhoto := []interface{}{
-			photoModel.ID,
-			photoModel.DocumentationID,
-			photoModel.PublicID,
-			photoModel.URL,
-			photoModel.Name,
-			photoModel.CreatedAt,
+			photomodel.ID,
+			photomodel.DocumentationID,
+			photomodel.PublicID,
+			photomodel.URL,
+			photomodel.Name,
+			photomodel.CreatedAt,
 		}
 
-		_, err = dbq.E(ctx, r.db, stmtPhoto, nil, argsPhoto)
+		_, err = dbq.E(ctx, tx, stmtPhoto, nil, argsPhoto)
 		if err != nil {
 			zap.L().Error(err.Error())
 			return err
