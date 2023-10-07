@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+	"project-adhyaksa/services/event/internal/customerror"
 )
 
 type Participant struct {
@@ -25,7 +26,10 @@ type ParticipantDTO struct {
 // mapping for DTO to Entity
 func NewParticipant(participant ParticipantDTO) (*Participant, error) {
 	if participant.ID == "" || participant.UserID == "" || participant.AdminID == "" || participant.Status == "" || participant.Event == nil {
-		return nil, errors.New("required field is missing")
+		return nil, &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
+		}
 	}
 
 	return &Participant{
