@@ -8,6 +8,7 @@ import (
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/internal/repository/model"
+	"project-adhyaksa/services/event/internal/repository/queries"
 	"time"
 
 	"github.com/rocketlaunchr/dbq"
@@ -68,43 +69,18 @@ func (r *documentationRepository) Create(documentation entity.Documentation, pho
 
 	return r.transaction(func(tx *sql.Tx) error {
 		//create documentation first
-		stmtDocumentation := dbq.INSERT(documentationModel.GetTableName(),
-			[]string{"id", "admin_id", "branch_id", "name", "date", "participant", "location", "description", "created_at"},
-			1,
-		)
+		stmtDocumentation := dbq.INSERT(documentationModel.GetTableName(), queries.RegisterDocumentationStatment, 1)
 
-		argsDocumentation := []interface{}{
-			documentationmodel.ID,
-			documentationmodel.AdminID,
-			documentationmodel.BranchID,
-			documentationmodel.Name,
-			documentationmodel.Date,
-			documentationmodel.Participant,
-			documentationmodel.Location,
-			documentationmodel.Description,
-			documentationmodel.CreatedAt,
-		}
-
-		_, err := dbq.E(ctx, tx, stmtDocumentation, nil, argsDocumentation)
+		_, err := dbq.E(ctx, tx, stmtDocumentation, nil, queries.RegisterDocumentationArgument(documentationmodel))
 		if err != nil {
 			zap.L().Error(err.Error())
 			return err
 		}
-		//create photo
-		stmtPhoto := dbq.INSERT(photoModel.GetTableName(),
-			[]string{"id", "documentation_id", "public_id", "url", "name", "created_at"},
-			1,
-		)
-		argsPhoto := []interface{}{
-			photomodel.ID,
-			photomodel.DocumentationID,
-			photomodel.PublicID,
-			photomodel.URL,
-			photomodel.Name,
-			photomodel.CreatedAt,
-		}
 
-		_, err = dbq.E(ctx, tx, stmtPhoto, nil, argsPhoto)
+		//create photo
+		stmtPhoto := dbq.INSERT(photoModel.GetTableName(), queries.RegisterPhotoStatment, 1)
+
+		_, err = dbq.E(ctx, tx, stmtPhoto, nil, queries.RegisterPhotoArgument(photomodel))
 		if err != nil {
 			zap.L().Error(err.Error())
 			return err

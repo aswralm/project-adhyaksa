@@ -6,8 +6,8 @@ import (
 	"project-adhyaksa/pkg/config"
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/domain/repository"
-	"project-adhyaksa/services/event/internal/customerror"
 	"project-adhyaksa/services/event/internal/repository/model"
+	"project-adhyaksa/services/event/internal/repository/queries"
 	"time"
 
 	"github.com/rocketlaunchr/dbq"
@@ -40,41 +40,14 @@ func (r *eventRepository) Create(event entity.Event, ctx context.Context) error 
 	defer cancel()
 
 	stmt := dbq.INSERT(eventModel.GetTableName(),
-		[]string{"id", "admin_id", "branch_id", "name", "start_time", "end_time", "location", "description", "created_at", "updated_at", "deleted_at"},
+		queries.RegisterEventStatment,
 		1,
 	)
 
-	args := []interface{}{
-		eventModel.ID,
-		eventModel.AdminID,
-		eventModel.BranchID,
-		eventModel.Name,
-		eventModel.StartTime,
-		eventModel.EndTime,
-		eventModel.Location,
-		eventModel.Description,
-		eventModel.CreatedAt,
-		eventModel.UpdatedAt,
-		eventModel.DeletedAt,
-	}
-
-	result, err := dbq.E(ctx, r.db, stmt, nil, args)
+	_, err = dbq.E(ctx, r.db, stmt, nil, queries.RegisterEventArgument(&eventModel))
 	if err != nil {
 		zap.L().Error(err.Error())
 		return err
-	}
-
-	rowAffected, err := result.RowsAffected()
-	if err != nil {
-		zap.L().Error(err.Error())
-		return err
-	}
-
-	if rowAffected == 0 {
-		return &customerror.Err{
-			Code:   customerror.ERROR_NOT_FOUND,
-			Errors: nil,
-		}
 	}
 
 	return nil
