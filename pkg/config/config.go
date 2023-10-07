@@ -11,6 +11,7 @@ import (
 type Config struct {
 	App
 	DBQ
+	Cloudinary
 }
 
 type App struct {
@@ -23,6 +24,12 @@ type App struct {
 	Port       string `env:"PORT"`
 }
 
+type Cloudinary struct {
+	CloudName string `env:"CLOUDINARY_CLOUD_NAME"`
+	ApiKey    string `env:"CLOUDINARY_API_KEY"`
+	ApiScret  string `env:"CLOUDINARY_API_SECRET"`
+	Folder    string `env:"CLOUDINARY_UPLOAD_FOLDER"`
+}
 type DBQ struct {
 	CustomTime string `env:"CUSTOM_TIMEOUT"`
 }

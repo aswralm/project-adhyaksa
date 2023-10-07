@@ -3,8 +3,6 @@ package entity
 import (
 	"errors"
 	"project-adhyaksa/services/event/internal/customerror"
-
-	"github.com/google/uuid"
 )
 
 type Branch struct {
@@ -32,15 +30,15 @@ func NewBranch(branch BranchDTO) (*Branch, error) {
 }
 
 // getter & setter for entity
-func (b Branch) SetID() {
-	b.id = uuid.New().String()
+func (b *Branch) SetID(id string) {
+	b.id = id
 }
 
 func (b *Branch) GetID() string {
 	return b.id
 }
 
-func (b Branch) SetName(name string) {
+func (b *Branch) SetName(name string) {
 	b.name = name
 }
 
@@ -48,7 +46,7 @@ func (b *Branch) GetName() string {
 	return b.name
 }
 
-func (b Branch) SetAddress(address string) {
+func (b *Branch) SetAddress(address string) {
 	b.address = address
 }
 

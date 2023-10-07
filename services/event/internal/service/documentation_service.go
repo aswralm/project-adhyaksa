@@ -1,0 +1,78 @@
+package service
+
+import (
+	"context"
+	"fmt"
+	"mime/multipart"
+	createid "project-adhyaksa/pkg/create-id"
+	"project-adhyaksa/pkg/upload"
+	"project-adhyaksa/services/event/domain/entity"
+	"project-adhyaksa/services/event/domain/repository"
+	"project-adhyaksa/services/event/domain/service"
+	"project-adhyaksa/services/event/internal/customerror"
+)
+
+type documentationService struct {
+	documentationRepository repository.DocumentationRepository
+	upload                  upload.Upload
+}
+
+func NewDocumentationService(documentationRepository repository.DocumentationRepository, upload upload.Upload) service.DocumentationService {
+	return &documentationService{documentationRepository: documentationRepository, upload: upload}
+}
+
+func (s *documentationService) Create(documentation service.DocumentationServiceDTO, file multipart.File, ctx context.Context) error {
+	branch, err := entity.NewBranch(entity.BranchDTO{ID: documentation.BranchID})
+	if err != nil {
+		return &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: err.Error(),
+		}
+	}
+	documentationEntity, err := entity.NewDocumentation(entity.DocumentationDTO{
+		ID:          createid.CreateID(),
+		AdminID:     documentation.AdminID,
+		Name:        documentation.Name,
+		Date:        documentation.Date,
+		Location:    documentation.Location,
+		Description: documentation.Description,
+		Participant: documentation.Participant,
+		Branch:      branch,
+	})
+
+	if err != nil {
+		return &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: err.Error(),
+		}
+	}
+
+	photoEntity, err := entity.NewPhoto(entity.PhotoDTO{
+		ID:            createid.CreateID(),
+		Name:          documentation.PhotoName,
+		Documentation: documentationEntity,
+	})
+	if err != nil {
+		return &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: err.Error(),
+		}
+	}
+
+	url, publicID, err := s.upload.UploadImage(ctx, file)
+	if err != nil {
+		return err
+	}
+	fmt.Println(url)
+	photoEntity.SetURL(string(url))
+	photoEntity.SetPublicID(publicID)
+
+	if err := s.documentationRepository.Create(*documentationEntity, *photoEntity, ctx); err != nil {
+		if err := s.upload.RemoveImage(ctx, publicID); err != nil {
+			return err
+		}
+		return err
+	}
+
+	return nil
+}
