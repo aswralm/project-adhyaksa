@@ -17,6 +17,8 @@ type Event struct {
 	CreatedAt   time.Time  `dbq:"created_at"`
 	UpdatedAt   *time.Time `dbq:"updated_at"`
 	DeletedAt   *time.Time `dbq:"deleted_at"`
+
+	Branch *Branch
 }
 
 func (Event) GetTableName() string {

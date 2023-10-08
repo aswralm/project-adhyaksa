@@ -9,10 +9,17 @@ import (
 func NewRoutes(r *gin.RouterGroup, usecase *usecase.UseCase) {
 	eventHandler := NewEventHandler(usecase.EventUseCase)
 	documentationHandler := NewDocumentationHandler(usecase.DocumentationUseCase)
-	routes := r.Group("/event")
+
+	routesEvent := r.Group("/event")
 	{
-		routes.POST("", eventHandler.RegisterEvent)
-		routes.POST("/documentation", documentationHandler.RegisterDocumentation)
+		routesEvent.POST("", eventHandler.RegisterEvent)
+		routesEvent.GET("", eventHandler.GetListEventPaginated)
+
+	}
+
+	routesDocumentation := r.Group("/documentation")
+	{
+		routesDocumentation.POST("", documentationHandler.RegisterDocumentation)
 	}
 
 }

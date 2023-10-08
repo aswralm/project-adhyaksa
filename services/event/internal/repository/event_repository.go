@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"project-adhyaksa/pkg/config"
 	"project-adhyaksa/pkg/pagination"
 	"project-adhyaksa/services/event/domain/entity"
@@ -63,6 +64,7 @@ func (r *eventRepository) GetListPaginated(ctx context.Context,
 		event           model.Event
 		branch          model.Branch
 		events          []entity.Event
+		count           model.CountModel
 		concurrentCount = 2
 		errChan         = make(chan error, concurrentCount)
 	)
@@ -74,15 +76,15 @@ func (r *eventRepository) GetListPaginated(ctx context.Context,
 		defer close(errChan)
 
 		opts := &dbq.Options{SingleResult: false, ConcreteStruct: event, DecoderConfig: dbq.StdTimeConversionConfig()}
-		data := dbq.MustQ(ctx, r.db, query, opts, argument)
-
-		if err, ok := data.(error); ok {
+		data, err := dbq.Q(ctx, r.db, query, opts, argument)
+		fmt.Println(&data)
+		if err != nil {
 			zap.L().Error(err.Error())
 			errChan <- err
 			return
 		}
-		result, err := event.EntityMapping(data.([]*model.Event))
-		zap.L().Error(err.Error())
+		model := data.([]*model.Event)
+		result, err := event.EntityMapping(model)
 		if err != nil {
 			errChan <- err
 			return
@@ -93,7 +95,6 @@ func (r *eventRepository) GetListPaginated(ctx context.Context,
 	go func() {
 		defer close(errChan)
 
-		var count int64
 		opts := &dbq.Options{SingleResult: true, ConcreteStruct: count, DecoderConfig: dbq.StdTimeConversionConfig()}
 		data := dbq.MustQ(ctx, r.db, queryCount, opts)
 
@@ -102,7 +103,7 @@ func (r *eventRepository) GetListPaginated(ctx context.Context,
 			errChan <- err
 			return
 		}
-		pagin.SetTotal(data.(int64))
+		pagin.SetTotal(int64(data.(*model.CountModel).Count))
 	}()
 
 	// Check if any error exists
