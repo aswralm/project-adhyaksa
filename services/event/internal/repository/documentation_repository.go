@@ -20,8 +20,8 @@ type documentationRepository struct {
 	config *config.Config
 }
 
-func NewDocumentationRepository(db *sql.DB, config *config.Config) repository.DocumentationRepository {
-	return &documentationRepository{db: db, config: config}
+func NewDocumentationRepository(config *config.Config) repository.DocumentationRepository {
+	return &documentationRepository{db: config.Db, config: config}
 }
 
 func (r *documentationRepository) transaction(fn func(tx *sql.Tx) error) error {

@@ -39,6 +39,7 @@ func NewProject() {
 
 	//setup db
 	db := database.ConnectMYSQL("mysql", config)
+	config.Db = db
 
 	//setup handler
 	handler := gin.New()
@@ -58,7 +59,7 @@ func NewProject() {
 
 	//dependency injection
 	uploadCloudinary := upload.NewCloudinaryUpload(cld, config)
-	repository := repository.InitRepository(db, config)
+	repository := repository.InitRepository(config)
 	service := service.InitService(repository, uploadCloudinary)
 	usecase := usecase.InitUseCase(service)
 	v1.NewEvent(handler, usecase)

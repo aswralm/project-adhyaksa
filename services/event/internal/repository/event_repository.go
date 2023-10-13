@@ -21,8 +21,8 @@ type eventRepository struct {
 	config *config.Config
 }
 
-func NewEventRepository(db *sql.DB, config *config.Config) repository.EventRepository {
-	return &eventRepository{db: db, config: config}
+func NewEventRepository(config *config.Config) repository.EventRepository {
+	return &eventRepository{db: config.Db, config: config}
 }
 
 func (r *eventRepository) Create(event entity.Event, ctx context.Context) error {
@@ -59,8 +59,8 @@ func (r *eventRepository) GetListPaginated(ctx context.Context,
 	filter *queryfilter.GetEventQueryFilter,
 ) ([]*entity.Event, error) {
 	var (
-		eventModel model.Event
-		//eventModels     []*model.Event*
+		eventModel      model.Event
+		eventModels     []*model.Event
 		branch          model.Branch
 		events          []*entity.Event
 		count           model.CountModel
@@ -74,9 +74,8 @@ func (r *eventRepository) GetListPaginated(ctx context.Context,
 	go func() {
 		defer close(errChan)
 
-		opts := &dbq.Options{SingleResult: false, ConcreteStruct: eventModel, DecoderConfig: dbq.StdTimeConversionConfig()}
-		data, err := dbq.Q(ctx, r.db, query, opts, argument).
-			fmt.Println(data.([]*model.Event))
+		opts := &dbq.Options{SingleResult: false, ConcreteStruct: eventModels, DecoderConfig: dbq.StdTimeConversionConfig()}
+		data, err := dbq.Q(ctx, r.db, query, opts, argument)
 		if err != nil {
 			zap.L().Error(err.Error())
 			errChan <- err

@@ -1,14 +1,19 @@
 package config
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 type Config struct {
+	Db     *sql.DB
+	GormDB *gorm.DB
+
 	App
 	DBQ
 	Cloudinary
