@@ -40,15 +40,15 @@ func (m *Event) New(e entity.Event) *Event {
 
 }
 
-func (m *Event) EntityMapping(events []*Event) ([]entity.Event, error) {
-	entities := make([]entity.Event, len(events))
+func (m *Event) EntityMapping(events []*Event) ([]*entity.Event, error) {
+	entities := make([]*entity.Event, len(events))
 
 	for i, model := range events {
 		branch, err := entity.NewBranch(entity.BranchDTO{
 			ID: model.BranchID,
 		})
 		if err != nil {
-			return entities, err
+			return nil, err
 		}
 		entity, err := entity.NewEvent(entity.EventDTO{
 			ID:          model.ID,
@@ -60,9 +60,9 @@ func (m *Event) EntityMapping(events []*Event) ([]entity.Event, error) {
 			Organizer:   branch,
 		})
 		if err != nil {
-			return entities, err
+			return nil, err
 		}
-		entities[i] = *entity
+		entities[i] = entity
 	}
 
 	return entities, nil

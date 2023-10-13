@@ -21,9 +21,9 @@ func (r *EventRepositoryMock) Create(event entity.Event, ctx context.Context) er
 func (r *EventRepositoryMock) GetListPaginated(ctx context.Context,
 	pagin *pagination.Paginator,
 	filter *queryfilter.GetEventQueryFilter,
-) ([]entity.Event, error) {
+) ([]*entity.Event, error) {
 	args := r.Mock.Called(ctx, pagin, filter)
-	events, ok := args.Get(0).([]entity.Event)
+	events, ok := args.Get(0).([]*entity.Event)
 	if !ok {
 		return nil, args.Error(1)
 	}

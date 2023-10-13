@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"project-adhyaksa/pkg/config"
 	"project-adhyaksa/pkg/pagination"
 	"project-adhyaksa/services/event/domain/entity"
@@ -32,7 +31,6 @@ func (r *eventRepository) Create(event entity.Event, ctx context.Context) error 
 
 	eventModel.New(event)
 	eventModel.CreatedAt = time.Now()
-
 	duration, err := time.ParseDuration(r.config.CustomTime)
 	if err != nil {
 		zap.L().Error(err.Error())
@@ -59,32 +57,34 @@ func (r *eventRepository) Create(event entity.Event, ctx context.Context) error 
 func (r *eventRepository) GetListPaginated(ctx context.Context,
 	pagin *pagination.Paginator,
 	filter *queryfilter.GetEventQueryFilter,
-) ([]entity.Event, error) {
+) ([]*entity.Event, error) {
 	var (
-		event           model.Event
+		eventModel model.Event
+		//eventModels     []*model.Event*
 		branch          model.Branch
-		events          []entity.Event
+		events          []*entity.Event
 		count           model.CountModel
 		concurrentCount = 2
 		errChan         = make(chan error, concurrentCount)
 	)
 	//create scope filter
-	query, argument := queries.GetListEventFilter(&event, &branch, pagin, filter)
-	queryCount := queries.GetListEventCount(event)
+	query, argument := queries.GetListEventFilter(&eventModel, &branch, pagin, filter)
+	queryCount := queries.GetListEventCount(eventModel)
 
 	go func() {
 		defer close(errChan)
 
-		opts := &dbq.Options{SingleResult: false, ConcreteStruct: event, DecoderConfig: dbq.StdTimeConversionConfig()}
-		data, err := dbq.Q(ctx, r.db, query, opts, argument)
-		fmt.Println(&data)
+		opts := &dbq.Options{SingleResult: false, ConcreteStruct: eventModel, DecoderConfig: dbq.StdTimeConversionConfig()}
+		data, err := dbq.Q(ctx, r.db, query, opts, argument).
+			fmt.Println(data.([]*model.Event))
 		if err != nil {
 			zap.L().Error(err.Error())
 			errChan <- err
 			return
 		}
+
 		model := data.([]*model.Event)
-		result, err := event.EntityMapping(model)
+		result, err := eventModel.EntityMapping(model)
 		if err != nil {
 			errChan <- err
 			return

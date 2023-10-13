@@ -14,5 +14,5 @@ type EventRepository interface {
 	GetListPaginated(ctx context.Context,
 		pagin *pagination.Paginator,
 		filter *queryfilter.GetEventQueryFilter,
-	) ([]entity.Event, error)
+	) ([]*entity.Event, error)
 }

@@ -29,11 +29,11 @@ func EventMappingServiceDTOEntity(event *service.EventServiceDTO) (*entity.Event
 	return eventEntity, nil
 }
 
-func EventMappingEntityServiceDTOList(eventEntities *[]entity.Event) []service.EventServiceDTO {
+func EventMappingEntityServiceDTOList(eventEntities []*entity.Event) []service.EventServiceDTO {
 	var (
-		eventServices = make([]service.EventServiceDTO, len(*eventEntities))
+		eventServices = make([]service.EventServiceDTO, len(eventEntities))
 	)
-	for i, eventEntity := range *eventEntities {
+	for i, eventEntity := range eventEntities {
 		eventService := service.EventServiceDTO{
 			ID:          eventEntity.GetID(),
 			BranchID:    eventEntity.GetBranch().GetID(),

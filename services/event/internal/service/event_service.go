@@ -37,7 +37,7 @@ func (uc *eventService) GetListPaginated(ctx context.Context,
 		return nil, err
 	}
 
-	result := mapping.EventMappingEntityServiceDTOList(&eventEntities)
+	result := mapping.EventMappingEntityServiceDTOList(eventEntities)
 
 	return result, nil
 
