@@ -61,6 +61,15 @@ func (r *documentationRepository) Create(documentation entity.Documentation, pho
 		photoModel         model.Photo
 	)
 
+	duration, err := time.ParseDuration(r.config.CustomTime)
+	if err != nil {
+		zap.L().Error(err.Error())
+		return err
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, duration)
+	defer cancel()
+
 	documentationmodel := documentationModel.New(documentation)
 	documentationmodel.CreatedAt = time.Now()
 

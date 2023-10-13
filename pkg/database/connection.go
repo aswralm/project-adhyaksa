@@ -9,6 +9,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var dsnCollection = func(driver string, config *config.Config) string {
@@ -35,10 +37,27 @@ func ConnectMYSQL(driver string, config *config.Config) *sql.DB {
 	if err != nil {
 		log.Fatal("Database connection error ", err)
 	}
-	db.SetConnMaxLifetime(time.Minute * 1)
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
+
+	duration, err := time.ParseDuration(config.ConnectionPool.MaxTimeConnection)
+	if err != nil {
+		log.Fatal("Database connection error ", err)
+	}
+	db.SetConnMaxLifetime(duration)
+	db.SetMaxOpenConns(config.ConnectionPool.MaxOpenConnection)
+	db.SetMaxIdleConns(config.ConnectionPool.MaxIdleConnection)
 
 	fmt.Println("Database connected successfully")
+	return db
+}
+
+// for GORM
+func ConnectGORM(driver string, config *config.Config) *gorm.DB {
+	dsn := dsnCollection(driver, config)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("Gorm connection error ", err)
+	}
+
+	fmt.Println("Gorm connected successfully")
 	return db
 }

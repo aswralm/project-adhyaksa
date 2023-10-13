@@ -26,11 +26,6 @@ func NewEventRepository(config *config.Config) repository.EventRepository {
 }
 
 func (r *eventRepository) Create(event entity.Event, ctx context.Context) error {
-
-	var eventModel model.Event
-
-	eventModel.New(event)
-	eventModel.CreatedAt = time.Now()
 	duration, err := time.ParseDuration(r.config.CustomTime)
 	if err != nil {
 		zap.L().Error(err.Error())
@@ -39,6 +34,11 @@ func (r *eventRepository) Create(event entity.Event, ctx context.Context) error 
 
 	ctx, cancel := context.WithTimeout(ctx, duration)
 	defer cancel()
+
+	var eventModel model.Event
+
+	eventModel.New(event)
+	eventModel.CreatedAt = time.Now()
 
 	stmt := dbq.INSERT(eventModel.GetTableName(),
 		queries.RegisterEventStatment,

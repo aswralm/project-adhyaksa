@@ -41,6 +41,10 @@ func NewProject() {
 	db := database.ConnectMYSQL("mysql", config)
 	config.Db = db
 
+	//setup gorm
+	gormDB := database.ConnectGORM("mysql", config)
+	config.GormDB = gormDB
+
 	//setup handler
 	handler := gin.New()
 

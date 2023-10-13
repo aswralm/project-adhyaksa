@@ -15,6 +15,7 @@ require (
 	github.com/rs/cors/wrapper/gin v0.0.0-20230905230807-20a76bd635d3
 	github.com/stretchr/testify v1.8.3
 	go.uber.org/zap v1.25.0
+	gorm.io/driver/mysql v1.5.2
 	gorm.io/gorm v1.25.5
 )
 

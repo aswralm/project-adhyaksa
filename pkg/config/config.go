@@ -17,6 +17,7 @@ type Config struct {
 	App
 	DBQ
 	Cloudinary
+	ConnectionPool
 }
 
 type App struct {
@@ -37,6 +38,12 @@ type Cloudinary struct {
 }
 type DBQ struct {
 	CustomTime string `env:"CUSTOM_TIMEOUT"`
+}
+
+type ConnectionPool struct {
+	MaxTimeConnection string `env:"MAX_CONN_TIME"`
+	MaxOpenConnection int    `env:"MAX_CONN_OPEN"`
+	MaxIdleConnection int    `env:"MAX_CONN_IDLE"`
 }
 
 func NewConfig(path string) (*Config, error) {
