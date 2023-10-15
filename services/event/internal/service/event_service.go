@@ -27,12 +27,12 @@ func (uc *eventService) Create(event service.EventServiceDTO, ctx context.Contex
 	return uc.eventRepository.Create(*eventEntity, ctx)
 }
 
-func (uc *eventService) GetListPaginated(ctx context.Context,
+func (uc *eventService) GetListPaginated(
 	pagin *pagination.Paginator,
 	filter *queryfilter.GetEventQueryFilter,
 ) ([]service.EventServiceDTO, error) {
 
-	eventEntities, err := uc.eventRepository.GetListPaginated(ctx, pagin, filter)
+	eventEntities, err := uc.eventRepository.GetListPaginated(pagin, filter)
 	if err != nil {
 		return nil, err
 	}

@@ -21,7 +21,7 @@ type EventServiceDTO struct {
 type EventService interface {
 	Create(event EventServiceDTO, ctx context.Context) error
 
-	GetListPaginated(ctx context.Context,
+	GetListPaginated(
 		pagin *pagination.Paginator,
 		filter *queryfilter.GetEventQueryFilter,
 	) ([]EventServiceDTO, error)

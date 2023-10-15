@@ -22,11 +22,11 @@ func (uc *eventUseCase) Create(event usecase.EventUseCaseDTO, ctx context.Contex
 	return uc.eventService.Create(eventDTO, ctx)
 }
 
-func (uc *eventUseCase) GetListPaginated(ctx context.Context,
+func (uc *eventUseCase) GetListPaginated(
 	pagin *pagination.Paginator,
 	filter *queryfilter.GetEventQueryFilter,
 ) ([]usecase.EventUseCaseDTO, error) {
-	eventService, err := uc.eventService.GetListPaginated(ctx, pagin, filter)
+	eventService, err := uc.eventService.GetListPaginated(pagin, filter)
 	if err != nil {
 		return nil, err
 	}

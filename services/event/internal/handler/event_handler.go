@@ -93,7 +93,7 @@ func (c *eventHandler) GetListEventPaginated(ctx *gin.Context) {
 
 	queryFilter := filters.QueryParamMapping()
 
-	events, err := c.eventUseCase.GetListPaginated(ctx, &paging, &queryFilter)
+	events, err := c.eventUseCase.GetListPaginated(&paging, &queryFilter)
 	if err != nil {
 		if customErr, ok := err.(*customerror.Err); ok {
 			ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to get events", customErr))

@@ -10,19 +10,22 @@ import (
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/internal/repository/model"
 	"project-adhyaksa/services/event/internal/repository/queries"
+	"sync"
 	"time"
 
 	"github.com/rocketlaunchr/dbq"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type eventRepository struct {
 	db     *sql.DB
+	gormDB *gorm.DB
 	config *config.Config
 }
 
 func NewEventRepository(config *config.Config) repository.EventRepository {
-	return &eventRepository{db: config.Db, config: config}
+	return &eventRepository{db: config.Db, gormDB: config.GormDB, config: config}
 }
 
 func (r *eventRepository) Create(event entity.Event, ctx context.Context) error {
@@ -54,55 +57,60 @@ func (r *eventRepository) Create(event entity.Event, ctx context.Context) error 
 	return nil
 }
 
-func (r *eventRepository) GetListPaginated(ctx context.Context,
+func (r *eventRepository) GetListPaginated(
 	pagin *pagination.Paginator,
 	filter *queryfilter.GetEventQueryFilter,
 ) ([]*entity.Event, error) {
 	var (
 		eventModel      model.Event
-		eventModels     []*model.Event
-		branch          model.Branch
 		events          []*entity.Event
-		count           model.CountModel
 		concurrentCount = 2
 		errChan         = make(chan error, concurrentCount)
+		wg              sync.WaitGroup
 	)
-	//create scope filter
-	query, argument := queries.GetListEventFilter(&eventModel, &branch, pagin, filter)
-	queryCount := queries.GetListEventCount(eventModel)
+
+	wg.Add(concurrentCount)
+
+	scopeFilter := queries.GetListEventFilterGORM(pagin, filter)
 
 	go func() {
-		defer close(errChan)
+		defer wg.Done()
+		var eventModels []model.Event
 
-		opts := &dbq.Options{SingleResult: false, ConcreteStruct: eventModels, DecoderConfig: dbq.StdTimeConversionConfig()}
-		data, err := dbq.Q(ctx, r.db, query, opts, argument)
+		err := r.gormDB.
+			Scopes(scopeFilter).
+			Find(&eventModels).
+			Error
 		if err != nil {
 			zap.L().Error(err.Error())
 			errChan <- err
 			return
 		}
-
-		model := data.([]*model.Event)
-		result, err := eventModel.EntityMapping(model)
+		result, err := eventModel.EntityMapping(eventModels)
 		if err != nil {
 			errChan <- err
 			return
 		}
+
 		events = result
 	}()
 
 	go func() {
-		defer close(errChan)
+		defer wg.Done()
 
-		opts := &dbq.Options{SingleResult: true, ConcreteStruct: count, DecoderConfig: dbq.StdTimeConversionConfig()}
-		data := dbq.MustQ(ctx, r.db, queryCount, opts)
-
-		if err, ok := data.(error); ok {
+		var count int64
+		if err := queries.GetListEventCountGORM(pagin, filter, r.gormDB).Count(&count).Error; err != nil {
 			zap.L().Error(err.Error())
 			errChan <- err
 			return
 		}
-		pagin.SetTotal(int64(data.(*model.CountModel).Count))
+		pagin.SetTotal(count)
+	}()
+
+	// Close the channel after both goroutines are done
+	go func() {
+		wg.Wait()
+		close(errChan)
 	}()
 
 	// Check if any error exists

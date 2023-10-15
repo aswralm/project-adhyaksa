@@ -22,7 +22,7 @@ type EventUseCaseDTO struct {
 type EventUseCase interface {
 	Create(event EventUseCaseDTO, ctx context.Context) error
 
-	GetListPaginated(ctx context.Context,
+	GetListPaginated(
 		pagin *pagination.Paginator,
 		filter *queryfilter.GetEventQueryFilter,
 	) ([]EventUseCaseDTO, error)

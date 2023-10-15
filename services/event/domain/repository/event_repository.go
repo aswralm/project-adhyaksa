@@ -11,8 +11,10 @@ type EventRepository interface {
 	Create(event entity.Event, ctx context.Context) error
 
 	//this method will using pagination and filter as response
-	GetListPaginated(ctx context.Context,
+	GetListPaginated(
 		pagin *pagination.Paginator,
 		filter *queryfilter.GetEventQueryFilter,
 	) ([]*entity.Event, error)
+
+	//GetByID(id string, ctx context.Context) ([]*entity.Event, error)
 }

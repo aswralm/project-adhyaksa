@@ -19,11 +19,11 @@ func (r *EventServiceMock) Create(event service.EventServiceDTO, ctx context.Con
 	return args.Error(0)
 }
 
-func (r *EventServiceMock) GetListPaginated(ctx context.Context,
+func (r *EventServiceMock) GetListPaginated(
 	pagin *pagination.Paginator,
 	filter *queryfilter.GetEventQueryFilter,
 ) ([]service.EventServiceDTO, error) {
-	args := r.Mock.Called(ctx, pagin, filter)
+	args := r.Mock.Called(pagin, filter)
 	events, ok := args.Get(0).([]service.EventServiceDTO)
 	if !ok {
 		return nil, args.Error(1)

@@ -6,6 +6,8 @@ import (
 	queryfilter "project-adhyaksa/services/event/domain/query_filter"
 	"project-adhyaksa/services/event/internal/repository/model"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 var RegisterEventStatment = []string{"id", "admin_id", "branch_id", "name", "start_time", "end_time", "location", "description", "created_at", "updated_at", "deleted_at"}
@@ -58,4 +60,45 @@ func GetListEventFilter(
 
 func GetListEventCount(event model.Event) string {
 	return fmt.Sprintf("SELECT COUNT(id) FROM %s", event.GetTableName())
+}
+
+func GetListEventFilterGORM(pagin *pagination.Paginator,
+	filter *queryfilter.GetEventQueryFilter) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		var (
+			eventModel model.Event
+		)
+		db = db.Table(eventModel.GetTableName()).Preload("Branch")
+
+		if filter.NextEvent {
+			db = db.Where("start_time > ?", time.Now())
+		}
+
+		if filter.OrderBy != "" {
+			db = db.Order(filter.OrderBy)
+		}
+
+		if filter.Limit > 0 {
+			db = db.Limit(filter.Limit)
+		}
+
+		if filter.Page > 0 {
+			db = db.Offset(pagin.Offset)
+		}
+		return db
+	}
+}
+
+func GetListEventCountGORM(
+	pagin *pagination.Paginator,
+	filter *queryfilter.GetEventQueryFilter,
+	db *gorm.DB) *gorm.DB {
+	var (
+		eventModel model.Event
+	)
+	db = db.Table(eventModel.GetTableName())
+	if filter.NextEvent {
+		db = db.Where("start_time > ?", time.Now())
+	}
+	return db
 }

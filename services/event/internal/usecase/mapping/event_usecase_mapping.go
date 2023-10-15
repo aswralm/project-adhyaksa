@@ -24,7 +24,7 @@ func EventMappingServiceToUsecaseList(events *[]service.EventServiceDTO) []useca
 			ID:          event.ID,
 			BranchID:    event.BranchID,
 			BranchName:  event.BranchName,
-			AdminID:     event.BranchID,
+			AdminID:     event.AdminID,
 			Name:        event.Name,
 			StartTime:   event.StartTime,
 			EndTime:     event.EndTime,

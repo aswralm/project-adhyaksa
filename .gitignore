@@ -9,3 +9,5 @@ services/event/integration-test/.env.test
 
 #vendoring
 vendor
+
+main
