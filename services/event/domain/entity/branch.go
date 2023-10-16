@@ -19,7 +19,10 @@ type BranchDTO struct {
 // mapping for DTO to Entity
 func NewBranch(branch BranchDTO) (*Branch, error) {
 	if branch.ID == "" {
-		return nil, errors.New(customerror.ERROR_FIELD_ENTITY)
+		return nil, &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
+		}
 	}
 
 	return &Branch{

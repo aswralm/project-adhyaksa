@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
-	createid "project-adhyaksa/pkg/create-id"
-	"project-adhyaksa/services/event/domain/entity"
+	"project-adhyaksa/pkg/pagination"
+	queryfilter "project-adhyaksa/services/event/domain/query_filter"
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/domain/service"
-	"project-adhyaksa/services/event/internal/customerror"
+	"project-adhyaksa/services/event/internal/service/mapping"
 )
 
 type eventService struct {
@@ -19,29 +19,37 @@ func NewEventService(eventRepository repository.EventRepository) service.EventSe
 
 func (uc *eventService) Create(event service.EventServiceDTO, ctx context.Context) error {
 
-	branch, err := entity.NewBranch(entity.BranchDTO{ID: event.BranchID})
+	eventEntity, err := mapping.EventMappingServiceDTOEntity(&event)
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
-	}
-
-	eventEntity, err := entity.NewEvent(entity.EventDTO{
-		ID:          createid.CreateID(),
-		Name:        event.Name,
-		StartTime:   event.StartTime,
-		EndTime:     event.EndTime,
-		Location:    event.Location,
-		Description: event.Description,
-		Organizer:   branch,
-	})
-	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 
 	return uc.eventRepository.Create(*eventEntity, ctx)
+}
+
+func (uc *eventService) GetListPaginated(
+	pagin *pagination.Paginator,
+	filter *queryfilter.GetEventQueryFilter,
+) ([]service.EventServiceDTO, error) {
+
+	eventEntities, err := uc.eventRepository.GetListPaginated(pagin, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	result := mapping.EventMappingEntityServiceDTOList(eventEntities)
+
+	return result, nil
+
+}
+
+func (uc *eventService) GetByID(id string, ctx context.Context) (*service.EventServiceDTO, error) {
+	eventEntity, err := uc.eventRepository.GetByID(id, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	eventServiceDTO := mapping.EventMappingEntityServiceDTO(eventEntity)
+
+	return eventServiceDTO, nil
 }

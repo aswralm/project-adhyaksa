@@ -20,8 +20,8 @@ type documentationRepository struct {
 	config *config.Config
 }
 
-func NewDocumentationRepository(db *sql.DB, config *config.Config) repository.DocumentationRepository {
-	return &documentationRepository{db: db, config: config}
+func NewDocumentationRepository(config *config.Config) repository.DocumentationRepository {
+	return &documentationRepository{db: config.Db, config: config}
 }
 
 func (r *documentationRepository) transaction(fn func(tx *sql.Tx) error) error {
@@ -60,6 +60,15 @@ func (r *documentationRepository) Create(documentation entity.Documentation, pho
 		documentationModel model.Documentation
 		photoModel         model.Photo
 	)
+
+	duration, err := time.ParseDuration(r.config.CustomTime)
+	if err != nil {
+		zap.L().Error(err.Error())
+		return err
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, duration)
+	defer cancel()
 
 	documentationmodel := documentationModel.New(documentation)
 	documentationmodel.CreatedAt = time.Now()

@@ -24,6 +24,7 @@ type Event struct {
 type EventDTO struct {
 	ID          string
 	Name        string
+	AdminID     string
 	StartTime   *time.Time
 	EndTime     *time.Time
 	Location    string
@@ -36,12 +37,16 @@ type EventDTO struct {
 func NewEvent(event EventDTO) (*Event, error) {
 
 	if event.Name == "" || event.StartTime == nil || event.EndTime == nil || event.Location == "" || event.Description == "" {
-		return nil, errors.New(customerror.ERROR_FIELD_ENTITY)
+		return nil, &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
+		}
 	}
 
 	return &Event{
 		id:          event.ID,
 		name:        event.Name,
+		adminID:     event.AdminID,
 		startTime:   event.StartTime,
 		endTime:     event.EndTime,
 		location:    event.Location,

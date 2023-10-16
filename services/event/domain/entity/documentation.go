@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+	"project-adhyaksa/services/event/internal/customerror"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,7 +37,10 @@ type DocumentationDTO struct {
 // mapping for DTO to Entity
 func NewDocumentation(documentation DocumentationDTO) (*Documentation, error) {
 	if documentation.Name == "" || documentation.Date == nil || documentation.Location == "" || documentation.Description == "" {
-		return nil, errors.New("ERROR_FIELD_ENTITY")
+		return nil, &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
+		}
 	}
 
 	return &Documentation{
