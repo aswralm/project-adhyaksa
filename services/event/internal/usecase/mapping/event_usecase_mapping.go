@@ -35,3 +35,19 @@ func EventMappingServiceToUsecaseList(events *[]service.EventServiceDTO) []useca
 	}
 	return eventUsecases
 }
+
+func EventMappingServiceToUsecase(event *service.EventServiceDTO) *usecase.EventUseCaseDTO {
+	eventUsecase := usecase.EventUseCaseDTO{
+		ID:          event.ID,
+		BranchID:    event.BranchID,
+		BranchName:  event.BranchName,
+		AdminID:     event.AdminID,
+		Name:        event.Name,
+		StartTime:   event.StartTime,
+		EndTime:     event.EndTime,
+		Location:    event.Location,
+		Description: event.Description,
+	}
+
+	return &eventUsecase
+}

@@ -26,4 +26,6 @@ type EventUseCase interface {
 		pagin *pagination.Paginator,
 		filter *queryfilter.GetEventQueryFilter,
 	) ([]EventUseCaseDTO, error)
+
+	GetByID(id string, ctx context.Context) (*EventUseCaseDTO, error)
 }

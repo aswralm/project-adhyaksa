@@ -33,3 +33,20 @@ func ListMapping(events *[]usecase.EventUseCaseDTO) []EventResponse {
 	}
 	return eventReponses
 }
+
+func SingleMapping(event *usecase.EventUseCaseDTO) *EventResponse {
+
+	eventReponse := EventResponse{
+		ID:          event.ID,
+		BranchID:    event.BranchID,
+		BranchName:  event.BranchName,
+		AdminID:     event.AdminID,
+		Name:        event.Name,
+		StartTime:   event.StartTime.String(),
+		EndTime:     event.EndTime.String(),
+		Location:    event.Location,
+		Description: event.Description,
+	}
+
+	return &eventReponse
+}

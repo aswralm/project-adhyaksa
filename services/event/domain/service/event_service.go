@@ -25,4 +25,6 @@ type EventService interface {
 		pagin *pagination.Paginator,
 		filter *queryfilter.GetEventQueryFilter,
 	) ([]EventServiceDTO, error)
+
+	GetByID(id string, ctx context.Context) (*EventServiceDTO, error)
 }

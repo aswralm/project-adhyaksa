@@ -42,3 +42,14 @@ func (uc *eventService) GetListPaginated(
 	return result, nil
 
 }
+
+func (uc *eventService) GetByID(id string, ctx context.Context) (*service.EventServiceDTO, error) {
+	eventEntity, err := uc.eventRepository.GetByID(id, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	eventServiceDTO := mapping.EventMappingEntityServiceDTO(eventEntity)
+
+	return eventServiceDTO, nil
+}

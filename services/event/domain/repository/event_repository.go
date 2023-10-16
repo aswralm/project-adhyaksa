@@ -16,5 +16,5 @@ type EventRepository interface {
 		filter *queryfilter.GetEventQueryFilter,
 	) ([]*entity.Event, error)
 
-	//GetByID(id string, ctx context.Context) ([]*entity.Event, error)
+	GetByID(id string, ctx context.Context) (*entity.Event, error)
 }

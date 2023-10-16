@@ -34,3 +34,13 @@ func (uc *eventUseCase) GetListPaginated(
 
 	return result, nil
 }
+
+func (uc *eventUseCase) GetByID(id string, ctx context.Context) (*usecase.EventUseCaseDTO, error) {
+	eventServiceDTO, err := uc.eventService.GetByID(id, ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := mapping.EventMappingServiceToUsecase(eventServiceDTO)
+	return result, nil
+
+}

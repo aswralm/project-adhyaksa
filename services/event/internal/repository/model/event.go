@@ -72,3 +72,31 @@ func (m *Event) EntityMapping(events []Event) ([]*entity.Event, error) {
 
 	return entities, nil
 }
+
+func (m *Event) EntitySingleMapping() (*entity.Event, error) {
+
+	branch, err := entity.NewBranch(entity.BranchDTO{
+		ID:      m.Branch.ID,
+		Name:    m.Branch.Name,
+		Address: m.Branch.Address,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	entity, err := entity.NewEvent(entity.EventDTO{
+		ID:          m.ID,
+		Name:        m.Name,
+		AdminID:     m.AdminID,
+		StartTime:   m.StartTime,
+		EndTime:     m.EndTime,
+		Location:    m.Location,
+		Description: m.Description,
+		Organizer:   branch,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
+}

@@ -31,3 +31,13 @@ func (r *EventServiceMock) GetListPaginated(
 
 	return events, args.Error(1)
 }
+
+func (r *EventServiceMock) GetByID(id string, ctx context.Context) (*service.EventServiceDTO, error) {
+	args := r.Mock.Called(id, ctx)
+	event, ok := args.Get(0).(*service.EventServiceDTO)
+	if !ok {
+		return nil, args.Error(1)
+	}
+
+	return event, args.Error(1)
+}

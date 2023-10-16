@@ -14,6 +14,7 @@ func NewRoutes(r *gin.RouterGroup, usecase *usecase.UseCase) {
 	{
 		routesEvent.POST("", eventHandler.RegisterEvent)
 		routesEvent.GET("", eventHandler.GetListEventPaginated)
+		routesEvent.GET("/:id", eventHandler.GetEventByID)
 
 	}
 

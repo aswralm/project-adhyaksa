@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"project-adhyaksa/pkg/pagination"
 	recovery "project-adhyaksa/pkg/recover"
@@ -114,4 +115,32 @@ func (c *eventHandler) GetListEventPaginated(ctx *gin.Context) {
 		},
 	))
 
+}
+
+func (c *eventHandler) GetEventByID(ctx *gin.Context) {
+	defer recovery.Recover(ctx)
+
+	id := ctx.Param("id")
+	if id == "" {
+		customErr := &customerror.Err{
+			Code:   customerror.ERROR_INVALID_REQUEST,
+			Errors: errors.New("please insert params: id").Error(),
+		}
+		ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to get event", customErr))
+		return
+	}
+
+	eventDTO, err := c.eventUseCase.GetByID(id, ctx)
+	if err != nil {
+		if customErr, ok := err.(*customerror.Err); ok {
+			ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to get event", customErr))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, res.JSON(false, "Something went wrong", nil))
+		return
+	}
+
+	result := response.SingleMapping(eventDTO)
+
+	ctx.JSON(http.StatusCreated, res.JSON(true, "get event successfully", result))
 }

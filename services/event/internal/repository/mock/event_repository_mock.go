@@ -30,3 +30,13 @@ func (r *EventRepositoryMock) GetListPaginated(
 
 	return events, args.Error(1)
 }
+
+func (r *EventRepositoryMock) GetByID(id string, ctx context.Context) (*entity.Event, error) {
+	args := r.Mock.Called(id, ctx)
+	event, ok := args.Get(0).(*entity.Event)
+	if !ok {
+		return nil, args.Error(1)
+	}
+
+	return event, args.Error(1)
+}
