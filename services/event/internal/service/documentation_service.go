@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"mime/multipart"
 	createid "project-adhyaksa/pkg/create-id"
 	"project-adhyaksa/pkg/pagination"
@@ -64,7 +63,7 @@ func (s *documentationService) Create(documentation service.DocumentationService
 	if err != nil {
 		return err
 	}
-	fmt.Println(url)
+
 	photoEntity.SetURL(string(url))
 	photoEntity.SetPublicID(publicID)
 
@@ -89,4 +88,14 @@ func (s *documentationService) GetListPaginated(
 	result := mapping.DocumentationMappingEntityServiceDTOList(documentationEntities)
 
 	return result, nil
+}
+
+func (s *documentationService) GetByID(id string, ctx context.Context) (*service.DocumentationServiceDTO, error) {
+	documentationRepository, err := s.documentationRepository.GetByID(id, ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := mapping.DocumentationMappingEntityServiceDTO(documentationRepository)
+
+	return result, err
 }

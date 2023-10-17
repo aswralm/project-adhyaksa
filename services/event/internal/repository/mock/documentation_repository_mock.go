@@ -26,3 +26,13 @@ func (r *DocumentationRepositoryMock) GetListPaginated(pagin *pagination.Paginat
 
 	return documentations, args.Error(1)
 }
+
+func (r *DocumentationRepositoryMock) GetByID(id string, ctx context.Context) (*entity.Documentation, error) {
+	args := r.Mock.Called(id, ctx)
+	documentation, ok := args.Get(0).(*entity.Documentation)
+	if !ok {
+		return nil, args.Error(1)
+	}
+
+	return documentation, args.Error(1)
+}

@@ -8,6 +8,7 @@ import (
 	"project-adhyaksa/pkg/pagination"
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/domain/repository"
+	"project-adhyaksa/services/event/internal/customerror"
 	"project-adhyaksa/services/event/internal/repository/model"
 	"project-adhyaksa/services/event/internal/repository/queries"
 	"sync"
@@ -142,7 +143,11 @@ func (r *documentationRepository) GetListPaginated(pagin *pagination.Paginator, 
 		defer wg.Done()
 
 		var count int64
-		if err := queries.GetListDocumentationCountGORM(r.gormDB).WithContext(ctx).Count(&count).Error; err != nil {
+		if err := queries.
+			GetListDocumentationCountGORM(r.gormDB).
+			WithContext(ctx).
+			Count(&count).
+			Error; err != nil {
 			zap.L().Error(err.Error())
 			errChan <- err
 			return
@@ -164,4 +169,44 @@ func (r *documentationRepository) GetListPaginated(pagin *pagination.Paginator, 
 	}
 
 	return documentations, nil
+}
+
+func (r *documentationRepository) GetByID(id string, ctx context.Context) (*entity.Documentation, error) {
+	var (
+		documentationModel model.Documentation
+	)
+	duration, err := time.ParseDuration(r.config.CustomTime)
+	if err != nil {
+		zap.L().Error(err.Error())
+		return nil, err
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, duration)
+	defer cancel()
+
+	err = r.gormDB.
+		WithContext(ctx).
+		Table(documentationModel.GetTableName()).
+		Preload("Branch").
+		Preload("Photo").
+		Where("id = ?", id).
+		First(&documentationModel).
+		Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		zap.L().Error(err.Error())
+		return nil, err
+	}
+	if err == gorm.ErrRecordNotFound {
+		return nil, &customerror.Err{
+			Code:   customerror.ERROR_NOT_FOUND,
+			Errors: nil,
+		}
+	}
+
+	result, err := model.MapDocumentationEntity(&documentationModel)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

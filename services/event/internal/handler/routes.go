@@ -21,7 +21,8 @@ func NewRoutes(r *gin.RouterGroup, usecase *usecase.UseCase) {
 	routesDocumentation := r.Group("/documentation")
 	{
 		routesDocumentation.POST("", documentationHandler.RegisterDocumentation)
-		routesEvent.GET("", documentationHandler.GetListDocumentationPaginated)
+		routesDocumentation.GET("", documentationHandler.GetListDocumentationPaginated)
+		routesDocumentation.GET("/:id", documentationHandler.GetEventByID)
 	}
 
 }

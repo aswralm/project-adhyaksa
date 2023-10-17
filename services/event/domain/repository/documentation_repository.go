@@ -13,4 +13,6 @@ type DocumentationRepository interface {
 		pagin *pagination.Paginator,
 		ctx context.Context,
 	) ([]*entity.Documentation, error)
+
+	GetByID(id string, ctx context.Context) (*entity.Documentation, error)
 }

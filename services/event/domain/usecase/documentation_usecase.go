@@ -27,4 +27,6 @@ type DocumentatitonUseCase interface {
 		pagin *pagination.Paginator,
 		ctx context.Context,
 	) (*[]DocumentationUseCaseDTO, error)
+
+	GetByID(id string, ctx context.Context) (*DocumentationUseCaseDTO, error)
 }

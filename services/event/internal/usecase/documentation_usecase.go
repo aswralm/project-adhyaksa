@@ -42,3 +42,13 @@ func (uc *documentationUseCase) GetListPaginated(
 
 	return result, nil
 }
+
+func (uc *documentationUseCase) GetByID(id string, ctx context.Context) (*usecase.DocumentationUseCaseDTO, error) {
+	documentationService, err := uc.documentationService.GetByID(id, ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := mapping.DocumentationMappingServiceToUseCase(documentationService)
+
+	return result, nil
+}

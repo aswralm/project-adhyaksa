@@ -27,4 +27,6 @@ type DocumentationService interface {
 		pagin *pagination.Paginator,
 		ctx context.Context,
 	) (*[]DocumentationServiceDTO, error)
+
+	GetByID(id string, ctx context.Context) (*DocumentationServiceDTO, error)
 }
