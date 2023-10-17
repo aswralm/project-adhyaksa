@@ -5,15 +5,15 @@ import (
 	"project-adhyaksa/services/event/domain/usecase"
 )
 
-func DocumentationMappingServiceToUseCaseList(documentationServices *[]service.DocumentationServiceDTO) *[]usecase.DocumentationUseCaseDTO {
+func DocumentationMappingServiceToUseCaseList(documentationServices []*service.DocumentationServiceDTO) []*usecase.DocumentationUseCaseDTO {
 	var (
-		documentationUseCases = make([]usecase.DocumentationUseCaseDTO, len(*documentationServices))
+		documentationUseCases = make([]*usecase.DocumentationUseCaseDTO, len(documentationServices))
 	)
-	for i, documentationService := range *documentationServices {
-		documentationUseCase := DocumentationMappingServiceToUseCase(&documentationService)
-		documentationUseCases[i] = *documentationUseCase
+	for i, documentationService := range documentationServices {
+		documentationUseCase := DocumentationMappingServiceToUseCase(documentationService)
+		documentationUseCases[i] = documentationUseCase
 	}
-	return &documentationUseCases
+	return documentationUseCases
 }
 
 func DocumentationMappingServiceToUseCase(documentationService *service.DocumentationServiceDTO) *usecase.DocumentationUseCaseDTO {

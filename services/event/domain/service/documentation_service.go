@@ -17,7 +17,7 @@ type DocumentationServiceDTO struct {
 	Description string
 	Participant uint32
 
-	PhotoService *[]PhotoServiceDTO
+	PhotoService []*PhotoServiceDTO
 }
 
 type DocumentationService interface {
@@ -26,7 +26,7 @@ type DocumentationService interface {
 	GetListPaginated(
 		pagin *pagination.Paginator,
 		ctx context.Context,
-	) (*[]DocumentationServiceDTO, error)
+	) ([]*DocumentationServiceDTO, error)
 
 	GetByID(id string, ctx context.Context) (*DocumentationServiceDTO, error)
 }

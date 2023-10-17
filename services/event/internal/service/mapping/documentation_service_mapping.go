@@ -5,16 +5,16 @@ import (
 	"project-adhyaksa/services/event/domain/service"
 )
 
-func DocumentationMappingEntityServiceDTOList(documentationEntities []*entity.Documentation) *[]service.DocumentationServiceDTO {
+func DocumentationMappingEntityServiceDTOList(documentationEntities []*entity.Documentation) []*service.DocumentationServiceDTO {
 	var (
-		documentationServices = make([]service.DocumentationServiceDTO, len(documentationEntities))
+		documentationServices = make([]*service.DocumentationServiceDTO, len(documentationEntities))
 	)
 	for i, documentationEntity := range documentationEntities {
 		documentationService := DocumentationMappingEntityServiceDTO(documentationEntity)
-		documentationServices[i] = *documentationService
+		documentationServices[i] = documentationService
 	}
 
-	return &documentationServices
+	return documentationServices
 }
 
 func DocumentationMappingEntityServiceDTO(documenationEntity *entity.Documentation) *service.DocumentationServiceDTO {

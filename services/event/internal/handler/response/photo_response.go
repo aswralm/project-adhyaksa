@@ -11,13 +11,13 @@ type PhotoResponse struct {
 	PhotoName     string `json:"photo_name"`
 }
 
-func ListPhoto(photoUseCases *[]usecase.PhotoUseCaseDTO) []PhotoResponse {
+func ListPhoto(photoUseCases []*usecase.PhotoUseCaseDTO) []*PhotoResponse {
 	var (
-		photoResponses = make([]PhotoResponse, len(*photoUseCases))
+		photoResponses = make([]*PhotoResponse, len(photoUseCases))
 	)
-	for i, photoEntity := range *photoUseCases {
-		photoService := DetailPhoto(&photoEntity)
-		photoResponses[i] = photoService
+	for i, photoEntity := range photoUseCases {
+		photoService := DetailPhoto(photoEntity)
+		photoResponses[i] = &photoService
 	}
 
 	return photoResponses

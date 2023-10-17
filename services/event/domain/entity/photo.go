@@ -1,10 +1,5 @@
 package entity
 
-import (
-	"errors"
-	"project-adhyaksa/services/event/internal/customerror"
-)
-
 type Photo struct {
 	id       string
 	publicID string
@@ -26,12 +21,12 @@ type PhotoDTO struct {
 
 // mapping for DTO to Entity
 func NewPhoto(photo PhotoDTO) (*Photo, error) {
-	if photo.Name == "" {
-		return nil, &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
-		}
-	}
+	// if photo.Name == "" {
+	// 	return nil, &customerror.Err{
+	// 		Code:   customerror.ERROR_INVALID_REQUEST,
+	// 		Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
+	// 	}
+	// }
 
 	return &Photo{
 		id:   photo.ID,

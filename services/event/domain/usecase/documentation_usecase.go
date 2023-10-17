@@ -17,7 +17,7 @@ type DocumentationUseCaseDTO struct {
 	Description string
 	Participant uint32
 
-	Photos *[]PhotoUseCaseDTO
+	Photos []*PhotoUseCaseDTO
 }
 
 type DocumentatitonUseCase interface {
@@ -26,7 +26,7 @@ type DocumentatitonUseCase interface {
 	GetListPaginated(
 		pagin *pagination.Paginator,
 		ctx context.Context,
-	) (*[]DocumentationUseCaseDTO, error)
+	) ([]*DocumentationUseCaseDTO, error)
 
 	GetByID(id string, ctx context.Context) (*DocumentationUseCaseDTO, error)
 }

@@ -5,16 +5,16 @@ import (
 	"project-adhyaksa/services/event/domain/usecase"
 )
 
-func PhotoMappingServiceToUseCaseList(photoServices *[]service.PhotoServiceDTO) *[]usecase.PhotoUseCaseDTO {
+func PhotoMappingServiceToUseCaseList(photoServices []*service.PhotoServiceDTO) []*usecase.PhotoUseCaseDTO {
 	var (
-		photoUseCases = make([]usecase.PhotoUseCaseDTO, len(*photoServices))
+		photoUseCases = make([]*usecase.PhotoUseCaseDTO, len(photoServices))
 	)
-	for i, photoService := range *photoServices {
-		photoUseCase := PhotoMappingServiceToUseCase(&photoService)
-		photoUseCases[i] = *photoUseCase
+	for i, photoService := range photoServices {
+		photoUseCase := PhotoMappingServiceToUseCase(photoService)
+		photoUseCases[i] = photoUseCase
 	}
 
-	return &photoUseCases
+	return photoUseCases
 }
 
 func PhotoMappingServiceToUseCase(photoService *service.PhotoServiceDTO) *usecase.PhotoUseCaseDTO {

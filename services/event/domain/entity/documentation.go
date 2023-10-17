@@ -19,7 +19,7 @@ type Documentation struct {
 
 	//relations
 	branch *Branch
-	photos *[]Photo
+	photos []*Photo
 }
 type DocumentationDTO struct {
 	ID          string
@@ -31,12 +31,13 @@ type DocumentationDTO struct {
 	Participant uint32
 
 	//relation
-	Photos *[]Photo
+	Photos []*Photo
 	Branch *Branch
 }
 
 // mapping for DTO to Entity
 func NewDocumentation(documentation DocumentationDTO) (*Documentation, error) {
+
 	if documentation.Name == "" || documentation.Date == nil || documentation.Location == "" || documentation.Description == "" {
 		return nil, &customerror.Err{
 			Code:   customerror.ERROR_INVALID_REQUEST,
@@ -121,10 +122,10 @@ func (e *Documentation) SetBranch(branch Branch) {
 	e.branch = &branch
 }
 
-func (e *Documentation) GetPhoto() *[]Photo {
+func (e *Documentation) GetPhoto() []*Photo {
 	return e.photos
 }
 
-func (e *Documentation) SetPhoto(photo []Photo) {
-	e.photos = &photo
+func (e *Documentation) SetPhoto(photo []*Photo) {
+	e.photos = photo
 }

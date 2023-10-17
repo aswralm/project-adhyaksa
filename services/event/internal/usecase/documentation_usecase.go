@@ -33,7 +33,7 @@ func (uc *documentationUseCase) Create(documentation usecase.DocumentationUseCas
 func (uc *documentationUseCase) GetListPaginated(
 	pagin *pagination.Paginator,
 	ctx context.Context,
-) (*[]usecase.DocumentationUseCaseDTO, error) {
+) ([]*usecase.DocumentationUseCaseDTO, error) {
 	documentationServices, err := uc.documentationService.GetListPaginated(pagin, ctx)
 	if err != nil {
 		return nil, err

@@ -82,7 +82,7 @@ func (h *documentationHandler) RegisterDocumentation(ctx *gin.Context) {
 	//register event
 	if err := h.documentationUseCase.Create(documentationUseCaseDTO, file, ctx); err != nil {
 		if eventErr, ok := err.(*customerror.Err); ok {
-			ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to register event", eventErr))
+			ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to register Documentation", eventErr))
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, res.JSON(false, "Something went wrong", nil))

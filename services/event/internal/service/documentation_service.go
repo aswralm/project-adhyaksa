@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"mime/multipart"
 	createid "project-adhyaksa/pkg/create-id"
 	"project-adhyaksa/pkg/pagination"
@@ -9,7 +10,6 @@ import (
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/domain/service"
-	"project-adhyaksa/services/event/internal/customerror"
 	"project-adhyaksa/services/event/internal/service/mapping"
 )
 
@@ -23,12 +23,10 @@ func NewDocumentationService(documentationRepository repository.DocumentationRep
 }
 
 func (s *documentationService) Create(documentation service.DocumentationServiceDTO, file multipart.File, ctx context.Context) error {
+	fmt.Println(documentation)
 	branch, err := entity.NewBranch(entity.BranchDTO{ID: documentation.BranchID})
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 	documentationEntity, err := entity.NewDocumentation(entity.DocumentationDTO{
 		ID:          createid.CreateID(),
@@ -42,10 +40,7 @@ func (s *documentationService) Create(documentation service.DocumentationService
 	})
 
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 
 	photoEntity, err := entity.NewPhoto(entity.PhotoDTO{
@@ -53,10 +48,7 @@ func (s *documentationService) Create(documentation service.DocumentationService
 		Documentation: documentationEntity,
 	})
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 
 	url, publicID, err := s.upload.UploadImage(ctx, file)
@@ -80,7 +72,8 @@ func (s *documentationService) Create(documentation service.DocumentationService
 func (s *documentationService) GetListPaginated(
 	pagin *pagination.Paginator,
 	ctx context.Context,
-) (*[]service.DocumentationServiceDTO, error) {
+) ([]*service.DocumentationServiceDTO, error) {
+
 	documentationEntities, err := s.documentationRepository.GetListPaginated(pagin, ctx)
 	if err != nil {
 		return nil, err

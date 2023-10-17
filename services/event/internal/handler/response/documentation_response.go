@@ -10,13 +10,13 @@ type DocumentationResponse struct {
 	Date        string           `json:"date"`
 	Location    string           `json:"location"`
 	Description string           `json:"description"`
-	Photos      *[]PhotoResponse `json:"photos"`
+	Photos      []*PhotoResponse `json:"photos"`
 }
 
-func ListDocumentation(documentationUseCases *[]usecase.DocumentationUseCaseDTO) []DocumentationResponse {
-	var documentationReponses = make([]DocumentationResponse, len(*documentationUseCases))
+func ListDocumentation(documentationUseCases []*usecase.DocumentationUseCaseDTO) []DocumentationResponse {
+	var documentationReponses = make([]DocumentationResponse, len(documentationUseCases))
 
-	for i, documentationUseCase := range *documentationUseCases {
+	for i, documentationUseCase := range documentationUseCases {
 		documentationReponse := DocumentationResponse{
 			ID:          documentationUseCase.ID,
 			BranchID:    documentationUseCase.BranchID,
@@ -42,7 +42,7 @@ func DetailDocumentation(documentationUseCase *usecase.DocumentationUseCaseDTO) 
 		Date:        documentationUseCase.Date.String(),
 		Location:    documentationUseCase.Location,
 		Description: documentationUseCase.Description,
-		Photos:      &photos,
+		Photos:      photos,
 	}
 
 	return &documentationReponse

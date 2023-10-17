@@ -26,9 +26,9 @@ func RegisterDocumentationArgument(documentationmodel *model.Documentation) []an
 func GetListDocumentationFilterGORM(pagin *pagination.Paginator) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		var (
-			eventModel model.Event
+			documentationModel model.Documentation
 		)
-		db = db.Table(eventModel.GetTableName()).Preload("Branch").Preload("Photo")
+		db = db.Table(documentationModel.GetTableName()).Preload("Branch").Preload("Photos")
 
 		if pagin.Limit > 0 {
 			db = db.Limit(pagin.Limit)
@@ -37,15 +37,16 @@ func GetListDocumentationFilterGORM(pagin *pagination.Paginator) func(db *gorm.D
 		if pagin.Offset > 0 {
 			db = db.Offset(pagin.Offset)
 		}
+
 		return db
 	}
 }
 
 func GetListDocumentationCountGORM(db *gorm.DB) *gorm.DB {
 	var (
-		eventModel model.Event
+		documentationModel model.Documentation
 	)
-	db = db.Table(eventModel.GetTableName())
+	db = db.Table(documentationModel.GetTableName())
 
 	return db
 }

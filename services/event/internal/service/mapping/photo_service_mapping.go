@@ -5,16 +5,16 @@ import (
 	"project-adhyaksa/services/event/domain/service"
 )
 
-func PhotoMappingEntityServiceDTOList(photoEntities *[]entity.Photo) *[]service.PhotoServiceDTO {
+func PhotoMappingEntityServiceDTOList(photoEntities []*entity.Photo) []*service.PhotoServiceDTO {
 	var (
-		photoServices = make([]service.PhotoServiceDTO, len(*photoEntities))
+		photoServices = make([]*service.PhotoServiceDTO, len(photoEntities))
 	)
-	for i, photoEntity := range *photoEntities {
-		photoService := PhotoMappingEntityServiceDTO(&photoEntity)
-		photoServices[i] = *photoService
+	for i, photoEntity := range photoEntities {
+		photoService := PhotoMappingEntityServiceDTO(photoEntity)
+		photoServices[i] = photoService
 	}
 
-	return &photoServices
+	return photoServices
 }
 
 func PhotoMappingEntityServiceDTO(photoEntity *entity.Photo) *service.PhotoServiceDTO {
