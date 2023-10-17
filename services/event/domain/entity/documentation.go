@@ -19,6 +19,7 @@ type Documentation struct {
 
 	//relations
 	branch *Branch
+	photos *[]Photo
 }
 type DocumentationDTO struct {
 	ID          string
@@ -118,4 +119,12 @@ func (e *Documentation) GetBranch() *Branch {
 
 func (e *Documentation) SetBranch(branch Branch) {
 	e.branch = &branch
+}
+
+func (e *Documentation) GetPhoto() *[]Photo {
+	return e.photos
+}
+
+func (e *Documentation) SetPhoto(photo []Photo) {
+	e.photos = &photo
 }

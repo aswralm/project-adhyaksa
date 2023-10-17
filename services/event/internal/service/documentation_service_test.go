@@ -36,7 +36,6 @@ func TestDocumentationService_Create(t *testing.T) {
 				BranchID:    "branch123",
 				Name:        "meeting tahunan",
 				Date:        &date,
-				PhotoName:   "photo123",
 				Location:    "jakarta",
 				Description: "meningkatkan silatuirahmi",
 				Participant: 10,

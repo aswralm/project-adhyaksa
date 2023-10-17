@@ -2,12 +2,14 @@ package handler
 
 import (
 	"net/http"
+	"project-adhyaksa/pkg/pagination"
 	recovery "project-adhyaksa/pkg/recover"
 	"project-adhyaksa/pkg/res"
 	"project-adhyaksa/services/event/domain/handler"
 	"project-adhyaksa/services/event/domain/usecase"
 	"project-adhyaksa/services/event/internal/customerror"
 	"project-adhyaksa/services/event/internal/handler/request"
+	"project-adhyaksa/services/event/internal/handler/response"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -78,7 +80,6 @@ func (h *documentationHandler) RegisterDocumentation(ctx *gin.Context) {
 		BranchID:    documentationRequest.BranchID,
 		AdminID:     adminID,
 		Name:        documentationRequest.Name,
-		PhotoName:   fileHeader.Filename,
 		Date:        documentationRequest.Date,
 		Location:    documentationRequest.Location,
 		Description: documentationRequest.Description,
@@ -96,4 +97,40 @@ func (h *documentationHandler) RegisterDocumentation(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, res.JSON(true, "Register event successfully", nil))
+}
+
+func (h *documentationHandler) GetListDocumentationPaginated(ctx *gin.Context) {
+	defer recovery.Recover(ctx)
+
+	var filters request.DocumentationQueryPaginated
+	if err := ctx.Bind(&filters); err != nil {
+		ctx.JSON(http.StatusInternalServerError, res.JSON(false, "Something went wrong", err.Error()))
+		return
+	}
+
+	// Create pagination instance
+	var paging pagination.Paginator
+	paging.Create(filters.Limit, filters.Page, ctx.Request.URL.Path)
+
+	documentations, err := h.documentationUseCase.GetListPaginated(&paging, ctx)
+	if err != nil {
+		if customErr, ok := err.(*customerror.Err); ok {
+			ctx.JSON(http.StatusBadRequest, res.JSON(false, "Failed to get documentations", customErr))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, res.JSON(false, "Something went wrong", nil))
+		return
+	}
+
+	result := response.ListDocumentation(documentations)
+	ctx.JSON(http.StatusOK, res.JSON(
+		true,
+		"Success get documentations",
+		result,
+		paging.Cursor(),
+		map[string]any{
+			"count": paging.Count,
+		},
+	))
+
 }

@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"mime/multipart"
 	createid "project-adhyaksa/pkg/create-id"
+	"project-adhyaksa/pkg/pagination"
 	"project-adhyaksa/pkg/upload"
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/domain/service"
 	"project-adhyaksa/services/event/internal/customerror"
+	"project-adhyaksa/services/event/internal/service/mapping"
 )
 
 type documentationService struct {
@@ -49,7 +51,6 @@ func (s *documentationService) Create(documentation service.DocumentationService
 
 	photoEntity, err := entity.NewPhoto(entity.PhotoDTO{
 		ID:            createid.CreateID(),
-		Name:          documentation.PhotoName,
 		Documentation: documentationEntity,
 	})
 	if err != nil {
@@ -75,4 +76,17 @@ func (s *documentationService) Create(documentation service.DocumentationService
 	}
 
 	return nil
+}
+
+func (s *documentationService) GetListPaginated(
+	pagin *pagination.Paginator,
+	ctx context.Context,
+) (*[]service.DocumentationServiceDTO, error) {
+	documentationEntities, err := s.documentationRepository.GetListPaginated(pagin, ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := mapping.DocumentationMappingEntityServiceDTOList(documentationEntities)
+
+	return result, nil
 }

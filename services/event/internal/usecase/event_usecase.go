@@ -30,7 +30,7 @@ func (uc *eventUseCase) GetListPaginated(
 	if err != nil {
 		return nil, err
 	}
-	result := mapping.EventMappingServiceToUsecaseList(&eventService)
+	result := mapping.EventMappingServiceToUseCaseList(&eventService)
 
 	return result, nil
 }
@@ -40,7 +40,7 @@ func (uc *eventUseCase) GetByID(id string, ctx context.Context) (*usecase.EventU
 	if err != nil {
 		return nil, err
 	}
-	result := mapping.EventMappingServiceToUsecase(eventServiceDTO)
+	result := mapping.EventMappingServiceToUseCase(eventServiceDTO)
 	return result, nil
 
 }

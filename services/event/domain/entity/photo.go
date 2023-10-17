@@ -3,8 +3,6 @@ package entity
 import (
 	"errors"
 	"project-adhyaksa/services/event/internal/customerror"
-
-	"github.com/google/uuid"
 )
 
 type Photo struct {
@@ -46,8 +44,8 @@ func NewPhoto(photo PhotoDTO) (*Photo, error) {
 }
 
 // getter & setter for entity
-func (p *Photo) SetID() {
-	p.id = uuid.New().String()
+func (p *Photo) SetID(id string) {
+	p.id = id
 }
 
 func (p *Photo) GetID() string {
