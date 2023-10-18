@@ -14,7 +14,7 @@ type EventResponse struct {
 	Description string `json:"description"`
 }
 
-func ListMapping(events *[]usecase.EventUseCaseDTO) []EventResponse {
+func ListEvent(events *[]usecase.EventUseCaseDTO) []EventResponse {
 	var eventReponses = make([]EventResponse, len(*events))
 
 	for i, event := range *events {
@@ -34,7 +34,7 @@ func ListMapping(events *[]usecase.EventUseCaseDTO) []EventResponse {
 	return eventReponses
 }
 
-func SingleMapping(event *usecase.EventUseCaseDTO) *EventResponse {
+func DetailEvent(event *usecase.EventUseCaseDTO) *EventResponse {
 
 	eventReponse := EventResponse{
 		ID:          event.ID,

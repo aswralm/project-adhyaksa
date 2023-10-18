@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"mime/multipart"
 	createid "project-adhyaksa/pkg/create-id"
+	"project-adhyaksa/pkg/pagination"
 	"project-adhyaksa/pkg/upload"
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/domain/service"
-	"project-adhyaksa/services/event/internal/customerror"
+	"project-adhyaksa/services/event/internal/service/mapping"
 )
 
 type documentationService struct {
@@ -22,12 +23,10 @@ func NewDocumentationService(documentationRepository repository.DocumentationRep
 }
 
 func (s *documentationService) Create(documentation service.DocumentationServiceDTO, file multipart.File, ctx context.Context) error {
+	fmt.Println(documentation)
 	branch, err := entity.NewBranch(entity.BranchDTO{ID: documentation.BranchID})
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 	documentationEntity, err := entity.NewDocumentation(entity.DocumentationDTO{
 		ID:          createid.CreateID(),
@@ -41,29 +40,22 @@ func (s *documentationService) Create(documentation service.DocumentationService
 	})
 
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 
 	photoEntity, err := entity.NewPhoto(entity.PhotoDTO{
 		ID:            createid.CreateID(),
-		Name:          documentation.PhotoName,
 		Documentation: documentationEntity,
 	})
 	if err != nil {
-		return &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: err.Error(),
-		}
+		return err
 	}
 
 	url, publicID, err := s.upload.UploadImage(ctx, file)
 	if err != nil {
 		return err
 	}
-	fmt.Println(url)
+
 	photoEntity.SetURL(string(url))
 	photoEntity.SetPublicID(publicID)
 
@@ -75,4 +67,28 @@ func (s *documentationService) Create(documentation service.DocumentationService
 	}
 
 	return nil
+}
+
+func (s *documentationService) GetListPaginated(
+	pagin *pagination.Paginator,
+	ctx context.Context,
+) ([]*service.DocumentationServiceDTO, error) {
+
+	documentationEntities, err := s.documentationRepository.GetListPaginated(pagin, ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := mapping.DocumentationMappingEntityServiceDTOList(documentationEntities)
+
+	return result, nil
+}
+
+func (s *documentationService) GetByID(id string, ctx context.Context) (*service.DocumentationServiceDTO, error) {
+	documentationRepository, err := s.documentationRepository.GetByID(id, ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := mapping.DocumentationMappingEntityServiceDTO(documentationRepository)
+
+	return result, err
 }

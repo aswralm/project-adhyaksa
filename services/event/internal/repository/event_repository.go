@@ -87,7 +87,7 @@ func (r *eventRepository) GetListPaginated(
 			errChan <- err
 			return
 		}
-		result, err := eventModel.EntityMapping(eventModels)
+		result, err := eventModel.MapEventEntityList(eventModels)
 		if err != nil {
 			errChan <- err
 			return
@@ -183,7 +183,7 @@ func (r *eventRepository) GetByID(id string, ctx context.Context) (*entity.Event
 		}
 	}
 
-	result, err := eventModel.EntitySingleMapping()
+	result, err := model.MapEventEntity(&eventModel)
 	if err != nil {
 		return nil, err
 	}

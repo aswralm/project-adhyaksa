@@ -17,26 +17,16 @@ func EventMappingUsecaseToService(event *usecase.EventUseCaseDTO) service.EventS
 	}
 }
 
-func EventMappingServiceToUsecaseList(events *[]service.EventServiceDTO) []usecase.EventUseCaseDTO {
+func EventMappingServiceToUseCaseList(events *[]service.EventServiceDTO) []usecase.EventUseCaseDTO {
 	var eventUsecases = make([]usecase.EventUseCaseDTO, len(*events))
 	for i, event := range *events {
-		eventusecase := usecase.EventUseCaseDTO{
-			ID:          event.ID,
-			BranchID:    event.BranchID,
-			BranchName:  event.BranchName,
-			AdminID:     event.AdminID,
-			Name:        event.Name,
-			StartTime:   event.StartTime,
-			EndTime:     event.EndTime,
-			Location:    event.Location,
-			Description: event.Description,
-		}
-		eventUsecases[i] = eventusecase
+		eventusecase := EventMappingServiceToUseCase(&event)
+		eventUsecases[i] = *eventusecase
 	}
 	return eventUsecases
 }
 
-func EventMappingServiceToUsecase(event *service.EventServiceDTO) *usecase.EventUseCaseDTO {
+func EventMappingServiceToUseCase(event *service.EventServiceDTO) *usecase.EventUseCaseDTO {
 	eventUsecase := usecase.EventUseCaseDTO{
 		ID:          event.ID,
 		BranchID:    event.BranchID,

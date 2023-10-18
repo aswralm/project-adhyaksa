@@ -104,7 +104,7 @@ func (c *eventHandler) GetListEventPaginated(ctx *gin.Context) {
 		return
 	}
 
-	result := response.ListMapping(&events)
+	result := response.ListEvent(&events)
 	ctx.JSON(http.StatusOK, res.JSON(
 		true,
 		"Success get events",
@@ -140,7 +140,7 @@ func (c *eventHandler) GetEventByID(ctx *gin.Context) {
 		return
 	}
 
-	result := response.SingleMapping(eventDTO)
+	result := response.DetailEvent(eventDTO)
 
 	ctx.JSON(http.StatusCreated, res.JSON(true, "get event successfully", result))
 }

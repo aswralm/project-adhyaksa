@@ -1,12 +1,5 @@
 package entity
 
-import (
-	"errors"
-	"project-adhyaksa/services/event/internal/customerror"
-
-	"github.com/google/uuid"
-)
-
 type Photo struct {
 	id       string
 	publicID string
@@ -28,12 +21,12 @@ type PhotoDTO struct {
 
 // mapping for DTO to Entity
 func NewPhoto(photo PhotoDTO) (*Photo, error) {
-	if photo.Name == "" {
-		return nil, &customerror.Err{
-			Code:   customerror.ERROR_INVALID_REQUEST,
-			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
-		}
-	}
+	// if photo.Name == "" {
+	// 	return nil, &customerror.Err{
+	// 		Code:   customerror.ERROR_INVALID_REQUEST,
+	// 		Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
+	// 	}
+	// }
 
 	return &Photo{
 		id:   photo.ID,
@@ -46,8 +39,8 @@ func NewPhoto(photo PhotoDTO) (*Photo, error) {
 }
 
 // getter & setter for entity
-func (p *Photo) SetID() {
-	p.id = uuid.New().String()
+func (p *Photo) SetID(id string) {
+	p.id = id
 }
 
 func (p *Photo) GetID() string {

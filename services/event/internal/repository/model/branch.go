@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"project-adhyaksa/services/event/domain/entity"
+	"time"
+)
 
 type Branch struct {
 	ID        string     `dbq:"name" gorm:"primaryKey;column:id"`
@@ -15,4 +18,12 @@ type Branch struct {
 
 func (Branch) GetTableName() string {
 	return "branches"
+}
+
+func MapBranchEntity(modelBranch *Branch) (*entity.Branch, error) {
+	return entity.NewBranch(entity.BranchDTO{
+		ID:      modelBranch.ID,
+		Name:    modelBranch.Name,
+		Address: modelBranch.Address,
+	})
 }

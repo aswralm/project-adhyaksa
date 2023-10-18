@@ -34,18 +34,8 @@ func EventMappingEntityServiceDTOList(eventEntities []*entity.Event) []service.E
 		eventServices = make([]service.EventServiceDTO, len(eventEntities))
 	)
 	for i, eventEntity := range eventEntities {
-		eventService := service.EventServiceDTO{
-			ID:          eventEntity.GetID(),
-			BranchID:    eventEntity.GetBranch().GetID(),
-			BranchName:  eventEntity.GetBranch().GetName(),
-			AdminID:     eventEntity.GetAdminID(),
-			Name:        eventEntity.GetName(),
-			StartTime:   eventEntity.GetStartTime(),
-			EndTime:     eventEntity.GetEndTime(),
-			Location:    eventEntity.GetLocation(),
-			Description: eventEntity.GetDescription(),
-		}
-		eventServices[i] = eventService
+		eventService := EventMappingEntityServiceDTO(eventEntity)
+		eventServices[i] = *eventService
 	}
 
 	return eventServices
