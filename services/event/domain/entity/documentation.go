@@ -54,6 +54,7 @@ func NewDocumentation(documentation DocumentationDTO) (*Documentation, error) {
 		description: documentation.Description,
 		participant: documentation.Participant,
 		branch:      documentation.Branch,
+		photos:      documentation.Photos,
 	}, nil
 }
 

@@ -25,6 +25,5 @@ func PhotoMappingEntityServiceDTO(photoEntity *entity.Photo) *service.PhotoServi
 		PhotoURL:      photoEntity.GetURL(),
 		PhotoName:     photoEntity.GetName(),
 	}
-
 	return &photoService
 }

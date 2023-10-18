@@ -188,7 +188,7 @@ func (r *documentationRepository) GetByID(id string, ctx context.Context) (*enti
 		WithContext(ctx).
 		Table(documentationModel.GetTableName()).
 		Preload("Branch").
-		Preload("Photo").
+		Preload("Photos").
 		Where("id = ?", id).
 		First(&documentationModel).
 		Error

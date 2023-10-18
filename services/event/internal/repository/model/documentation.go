@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"project-adhyaksa/services/event/domain/entity"
 	"time"
 )
@@ -20,7 +19,7 @@ type Documentation struct {
 	DeletedAt   *time.Time `dbq:"deleted_at" gorm:"column:deleted_at"`
 
 	Branch *Branch  `gorm:"foreignkey:BranchID"`
-	Photos *[]Photo `gorm:"foreignKey:DocumentationID"`
+	Photos []*Photo `gorm:"foreignKey:DocumentationID"`
 }
 
 func (Documentation) GetTableName() string {
@@ -59,19 +58,19 @@ func MapDocumentationEntity(documentation *Documentation) (*entity.Documentation
 	if err != nil {
 		return nil, err
 	}
-	var photoEntities = make([]*entity.Photo, len(*documentation.Photos))
-	for i, photoModel := range *documentation.Photos {
-		photo, err := MapPhotoEntity(&photoModel)
+
+	photoEntities := make([]*entity.Photo, len(documentation.Photos))
+	for i, photoModel := range documentation.Photos {
+		photo, err := MapPhotoEntity(photoModel)
 		if err != nil {
 			return nil, err
 		}
-		photoEntities[i] = photo
 
-		fmt.Println("didalam iterasi", photo)
+		photoEntity := photo
+		photoEntities[i] = photoEntity
+
 	}
-	fmt.Println("model:", documentation.Photos)
-	fmt.Println("entity:", photoEntities)
-	fmt.Println("lenght", len(*documentation.Photos))
+
 	entity, err := entity.NewDocumentation(entity.DocumentationDTO{
 		ID:          documentation.ID,
 		Name:        documentation.Name,

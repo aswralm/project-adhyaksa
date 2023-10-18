@@ -17,6 +17,7 @@ func ListDocumentation(documentationUseCases []*usecase.DocumentationUseCaseDTO)
 	var documentationReponses = make([]DocumentationResponse, len(documentationUseCases))
 
 	for i, documentationUseCase := range documentationUseCases {
+		photos := ListPhoto(documentationUseCase.Photos)
 		documentationReponse := DocumentationResponse{
 			ID:          documentationUseCase.ID,
 			BranchID:    documentationUseCase.BranchID,
@@ -25,6 +26,7 @@ func ListDocumentation(documentationUseCases []*usecase.DocumentationUseCaseDTO)
 			Date:        documentationUseCase.Date.String(),
 			Location:    documentationUseCase.Location,
 			Description: documentationUseCase.Description,
+			Photos:      photos,
 		}
 		documentationReponses[i] = documentationReponse
 	}
