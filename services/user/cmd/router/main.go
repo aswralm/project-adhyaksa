@@ -1,5 +1,8 @@
 package main
 
+import "fmt"
+
 func main() {
-	panic("implement_me")
+	fmt.Println("Hello world!")
+	fmt.Println("Saya Team 1")
 }
