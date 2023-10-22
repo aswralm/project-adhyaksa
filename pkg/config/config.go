@@ -59,3 +59,17 @@ func NewConfig(path string) (*Config, error) {
 
 	return cfg, nil
 }
+
+func NewConfigV2(path string) (*Config, error) {
+	if err := godotenv.Load(fmt.Sprintf("%v/.env.test", path)); err != nil {
+		log.Fatal("Config error : ", err)
+	}
+
+	cfg := &Config{}
+	err := cleanenv.ReadEnv(cfg)
+	if err != nil {
+		return nil, err
+	}
+
+	return cfg, nil
+}

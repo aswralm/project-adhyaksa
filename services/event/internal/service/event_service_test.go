@@ -18,7 +18,7 @@ var (
 	eventRepo = new(mocks.EventRepositoryMock)
 )
 
-func TestEventService_Create(t *testing.T) {
+func TestEventServiceCreate(t *testing.T) {
 	var (
 		startTime = time.Date(2023, 10, 10, 19, 0, 0, 0, time.UTC)
 		endTime   = time.Date(2023, 10, 10, 22, 0, 0, 0, time.UTC)

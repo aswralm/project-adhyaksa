@@ -2,7 +2,7 @@ go.sum
 
 #tim3
 services/event/.env
-services/event/integration-test/.env.test
+*.env.test
 
 #log
 *.log
