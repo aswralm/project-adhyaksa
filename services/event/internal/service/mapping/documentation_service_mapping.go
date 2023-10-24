@@ -18,7 +18,9 @@ func DocumentationMappingEntityServiceDTOList(documentationEntities []*entity.Do
 }
 
 func DocumentationMappingEntityServiceDTO(documenationEntity *entity.Documentation) *service.DocumentationServiceDTO {
-
+	if documenationEntity == nil {
+		return nil
+	}
 	eventService := service.DocumentationServiceDTO{
 		ID:           documenationEntity.GetID(),
 		BranchID:     documenationEntity.GetBranch().GetID(),
