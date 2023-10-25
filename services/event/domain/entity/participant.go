@@ -2,43 +2,46 @@ package entity
 
 import (
 	"errors"
+	valueobject "project-adhyaksa/services/event/domain/value_object"
 	"project-adhyaksa/services/event/internal/customerror"
 )
 
 type Participant struct {
-	id      string
-	userID  string
-	adminID string
-	status  string
+	id     string
+	userID string
+	status valueobject.StatusParticipant
 
 	//relation
 	event *Event
 }
 type ParticipantDTO struct {
-	ID      string
-	UserID  string
-	AdminID string
-	Status  string
+	ID     string
+	UserID string
+	Status string
 
 	Event *Event
 }
 
 // mapping for DTO to Entity
 func NewParticipant(participant ParticipantDTO) (*Participant, error) {
-	if participant.ID == "" || participant.UserID == "" || participant.AdminID == "" || participant.Status == "" || participant.Event == nil {
+	if participant.Status == "" || participant.Event == nil {
 		return nil, &customerror.Err{
 			Code:   customerror.ERROR_INVALID_REQUEST,
 			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
 		}
 	}
 
-	return &Participant{
-		id:      participant.ID,
-		userID:  participant.UserID,
-		adminID: participant.AdminID,
-		status:  participant.Status,
-		event:   participant.Event,
-	}, nil
+	result := &Participant{
+		id:     participant.ID,
+		userID: participant.UserID,
+		event:  participant.Event,
+	}
+
+	if valueobject.IsValidStatusParticipant(valueobject.StatusParticipant(participant.Status)) {
+		result.status = valueobject.StatusParticipant(participant.Status)
+	}
+
+	return result, nil
 }
 
 // getter & setter for entity
@@ -58,19 +61,11 @@ func (p *Participant) GetUserID() string {
 	return p.userID
 }
 
-func (p *Participant) SetAdminID(adminID string) {
-	p.adminID = adminID
-}
-
-func (p *Participant) GetAdminID() string {
-	return p.adminID
-}
-
-func (p *Participant) SetStatus(status string) {
+func (p *Participant) SetStatus(status valueobject.StatusParticipant) {
 	p.status = status
 }
 
-func (p *Participant) GetStatus() string {
+func (p *Participant) GetStatus() valueobject.StatusParticipant {
 	return p.status
 }
 

@@ -2,6 +2,7 @@ package entity_test
 
 import (
 	"project-adhyaksa/services/event/domain/entity"
+	"project-adhyaksa/services/event/internal/customerror"
 	"testing"
 
 	"github.com/google/uuid"
@@ -27,47 +28,43 @@ func TestParticipantEntity(t *testing.T) {
 		{
 			name: "positive case",
 			dto: entity.ParticipantDTO{
-				ID:      uuid.New().String(),
-				UserID:  "user1",
-				AdminID: "admin1",
-				Status:  "active",
-				Event:   &entity.Event{}, // assuming Event struct is defined in your entity package
+				ID:     uuid.New().String(),
+				UserID: "user1",
+				Status: "present",
+				Event:  &entity.Event{}, // assuming Event struct is defined in your entity package
 			},
 			expected: &expected{
-				ID:      uuid.New().String(),
-				UserID:  "user1",
-				AdminID: "admin1",
-				Status:  "active",
-				Event:   &entity.Event{},
+				ID:     uuid.New().String(),
+				UserID: "user1",
+				Status: "present",
+				Event:  &entity.Event{},
 			},
 			isError: false,
 			err:     "",
 		},
 		{
-			name: "negative case - missing ID",
+			name: "negative case - missing status",
 			dto: entity.ParticipantDTO{
-				ID:      "",
-				UserID:  "user1",
-				AdminID: "admin1",
-				Status:  "active",
-				Event:   &entity.Event{},
+				ID:     uuid.New().String(),
+				UserID: "user1",
+				Status: "",
+				Event:  &entity.Event{},
 			},
 			expected: nil,
 			isError:  true,
-			err:      "required field is missing",
+			err:      customerror.ERROR_INVALID_REQUEST,
 		},
 		{
 			name: "negative case - missing Event",
 			dto: entity.ParticipantDTO{
-				ID:      uuid.New().String(),
-				UserID:  "user1",
-				AdminID: "admin1",
-				Status:  "active",
-				Event:   nil,
+				ID:     uuid.New().String(),
+				UserID: "user1",
+				Status: "present",
+				Event:  nil,
 			},
 			expected: nil,
 			isError:  true,
-			err:      "required field is missing",
+			err:      customerror.ERROR_INVALID_REQUEST,
 		},
 	}
 
@@ -79,8 +76,7 @@ func TestParticipantEntity(t *testing.T) {
 			if !test.isError {
 				assert.NotNil(t, participant)
 				assert.Equal(t, test.expected.UserID, participant.GetUserID())
-				assert.Equal(t, test.expected.AdminID, participant.GetAdminID())
-				assert.Equal(t, test.expected.Status, participant.GetStatus())
+				assert.Equal(t, test.expected.Status, string(participant.GetStatus()))
 				assert.Equal(t, test.expected.Event, participant.GetEvent())
 			} else {
 				assert.Equal(t, test.err, err.Error())
