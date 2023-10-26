@@ -6,5 +6,5 @@ import (
 )
 
 type ParticipantRepository interface {
-	Create(participant entity.Participant, ctx context.Context) error
+	Create(participant *entity.Participant, ctx context.Context) error
 }

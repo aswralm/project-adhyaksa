@@ -17,11 +17,11 @@ type Participant struct {
 	Branch *Event `gorm:"foreignkey:EventID"`
 }
 
-func (m *Participant) GetTableName() string {
+func (m Participant) GetTableName() string {
 	return "participants"
 }
 
-func (m *Participant) New(e entity.Participant) *Participant {
+func (m *Participant) New(e *entity.Participant) *Participant {
 
 	m.ID = e.GetID()
 	m.UserID = e.GetUserID()

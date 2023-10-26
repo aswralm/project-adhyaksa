@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"fmt"
 	"log"
 	"project-adhyaksa/pkg/config"
 	"project-adhyaksa/pkg/database"
@@ -32,7 +33,7 @@ func refreshEventTable(config *config.Config, tables map[string]interface{}) {
 			log.Println(err)
 			break
 		} else {
-			log.Println("refresh table success")
+			log.Println(fmt.Sprintf("refresh %s success", tableName))
 		}
 	}
 

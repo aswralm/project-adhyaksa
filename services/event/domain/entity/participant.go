@@ -24,7 +24,7 @@ type ParticipantDTO struct {
 
 // mapping for DTO to Entity
 func NewParticipant(participant ParticipantDTO) (*Participant, error) {
-	if participant.Status == "" || participant.Event == nil {
+	if participant.Status == "" {
 		return nil, &customerror.Err{
 			Code:   customerror.ERROR_INVALID_REQUEST,
 			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),

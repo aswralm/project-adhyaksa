@@ -4,8 +4,6 @@ import (
 	"errors"
 	"project-adhyaksa/services/event/internal/customerror"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Event struct {
@@ -56,8 +54,8 @@ func NewEvent(event EventDTO) (*Event, error) {
 }
 
 // getter & setter for entity
-func (e *Event) SetID() {
-	e.id = uuid.New().String()
+func (e *Event) SetID(id string) {
+	e.id = id
 }
 
 func (e *Event) GetID() string {
