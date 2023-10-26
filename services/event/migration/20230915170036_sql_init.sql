@@ -39,7 +39,7 @@ CREATE TABLE `participants` (
   `user_id` varchar(36),
   `admin_id` varchar(36),
   `event_id` varchar(36) NOT NULL,
-  `status` ENUM ('hadir', 'tidak_hadir'),
+  `status` ENUM ('present', 'absent'),
   `created_at` timestamp DEFAULT (now()),
   `updated_at` timestamp NULL,
   `deleted_at` timestamp NULL

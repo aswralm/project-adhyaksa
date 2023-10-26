@@ -2,6 +2,7 @@ package entity_test
 
 import (
 	"project-adhyaksa/services/event/domain/entity"
+	"project-adhyaksa/services/event/internal/customerror"
 	"testing"
 
 	"github.com/google/uuid"
@@ -45,7 +46,7 @@ func TestBranchEntity(t *testing.T) {
 			},
 			expected: nil,
 			isError:  true,
-			err:      "ERROR_FIELD_ENTITY",
+			err:      customerror.ERROR_INVALID_REQUEST,
 		},
 	}
 

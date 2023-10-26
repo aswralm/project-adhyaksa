@@ -2,6 +2,7 @@ package entity_test
 
 import (
 	"project-adhyaksa/services/event/domain/entity"
+	"project-adhyaksa/services/event/internal/customerror"
 	"testing"
 	"time"
 
@@ -57,8 +58,7 @@ func TestDocumentationEntity(t *testing.T) {
 		{
 			name: "negative case",
 			dto: entity.DocumentationDTO{
-				ID:          "",
-				Name:        "Dokumentasi Pertemuan Bulanan",
+				ID:          uuid.New().String(),
 				Date:        &date,
 				Location:    "gedung serbaguna",
 				Description: "membangun persatuan dan kesatuan",
@@ -66,7 +66,7 @@ func TestDocumentationEntity(t *testing.T) {
 			},
 			expected: nil,
 			isError:  true,
-			err:      "ERROR_FIELD_ENTITY",
+			err:      customerror.ERROR_INVALID_REQUEST,
 		},
 	}
 

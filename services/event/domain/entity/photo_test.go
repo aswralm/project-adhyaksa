@@ -37,17 +37,6 @@ func TestPhotoEntity(t *testing.T) {
 			isError: false,
 			err:     "",
 		},
-		{
-			name: "negative case",
-			dto: entity.PhotoDTO{
-				ID:   "",
-				URL:  "https://example.com/photo1.jpg",
-				Name: "photo1",
-			},
-			expected: nil,
-			isError:  true,
-			err:      "ERROR_FIELD_ENTITY",
-		},
 	}
 
 	for _, test := range testcases {

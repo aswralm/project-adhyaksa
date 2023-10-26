@@ -4,8 +4,6 @@ import (
 	"errors"
 	"project-adhyaksa/services/event/internal/customerror"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Documentation struct {
@@ -59,8 +57,8 @@ func NewDocumentation(documentation DocumentationDTO) (*Documentation, error) {
 }
 
 // getter & setter for entity
-func (d *Documentation) SetID() {
-	d.id = uuid.New().String()
+func (d *Documentation) SetID(id string) {
+	d.id = id
 }
 
 func (d *Documentation) GetID() string {

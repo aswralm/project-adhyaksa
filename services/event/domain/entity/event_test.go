@@ -55,8 +55,8 @@ func TestEventEntity(t *testing.T) {
 		{
 			name: "negative case",
 			dto: entity.EventDTO{
-				ID:          "",
-				Name:        "Pertemuan Bulanan",
+				ID:          uuid.New().String(),
+				Name:        "",
 				StartTime:   &startTime,
 				EndTime:     &endTime,
 				Location:    "gedung serbaguna",
@@ -64,7 +64,7 @@ func TestEventEntity(t *testing.T) {
 			},
 			expected: nil,
 			isError:  true,
-			err:      customerror.ERROR_FIELD_ENTITY,
+			err:      customerror.ERROR_INVALID_REQUEST,
 		},
 	}
 

@@ -21,21 +21,17 @@ type PhotoDTO struct {
 
 // mapping for DTO to Entity
 func NewPhoto(photo PhotoDTO) (*Photo, error) {
-	// if photo.Name == "" {
-	// 	return nil, &customerror.Err{
-	// 		Code:   customerror.ERROR_INVALID_REQUEST,
-	// 		Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
-	// 	}
-	// }
 
-	return &Photo{
+	result := &Photo{
 		id:   photo.ID,
 		url:  photo.URL,
 		name: photo.Name,
+	}
 
-		//relation
-		documentation: photo.Documentation,
-	}, nil
+	if photo.Documentation != nil {
+		result.documentation = photo.Documentation
+	}
+	return result, nil
 }
 
 // getter & setter for entity
