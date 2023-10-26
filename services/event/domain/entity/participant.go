@@ -24,19 +24,17 @@ type ParticipantDTO struct {
 
 // mapping for DTO to Entity
 func NewParticipant(participant ParticipantDTO) (*Participant, error) {
-	if participant.Status == "" {
+	if participant.Status == "" || participant.Event == nil {
 		return nil, &customerror.Err{
 			Code:   customerror.ERROR_INVALID_REQUEST,
 			Errors: errors.New(customerror.ERROR_FIELD_ENTITY).Error(),
 		}
 	}
-
 	result := &Participant{
 		id:     participant.ID,
 		userID: participant.UserID,
 		event:  participant.Event,
 	}
-
 	if valueobject.IsValidStatusParticipant(valueobject.StatusParticipant(participant.Status)) {
 		result.status = valueobject.StatusParticipant(participant.Status)
 	}

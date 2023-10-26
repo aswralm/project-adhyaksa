@@ -8,20 +8,17 @@ import (
 
 func ParticipantMappingServiceDTOEntity(dto *service.ParticipantServiceDTO) (*entity.Participant, error) {
 
+	eventEntity := entity.Event{}
+	eventEntity.SetID(dto.EventID)
+
 	participantEntity, err := entity.NewParticipant(entity.ParticipantDTO{
 		ID:     createid.CreateID(),
 		UserID: dto.UserID,
 		Status: dto.Status,
+		Event:  &eventEntity,
 	})
 	if err != nil {
 		return nil, err
-	}
-
-	if dto.EventID != "" {
-		eventEntity := entity.Event{}
-		eventEntity.SetID(dto.EventID)
-
-		participantEntity.SetEvent(&eventEntity)
 	}
 
 	return participantEntity, nil
