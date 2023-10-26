@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"errors"
-	createid "project-adhyaksa/pkg/create-id"
 	"project-adhyaksa/services/event/domain/service"
 	valueobject "project-adhyaksa/services/event/domain/value_object"
 	"project-adhyaksa/services/event/internal/customerror"
@@ -29,7 +28,6 @@ func TestParticipantServiceCreate(t *testing.T) {
 		{
 			name: "positive case",
 			dto: service.ParticipantServiceDTO{
-				ID:      createid.CreateID(),
 				UserID:  "defb7588-55ed-45ea-a3ad-af1fcb37fb2a",
 				EventID: "4cf68d55-aa88-48f1-b2ed-67873669a168",
 				Status:  string(valueobject.StatusPresent),
@@ -40,7 +38,6 @@ func TestParticipantServiceCreate(t *testing.T) {
 		{
 			name: "negative case: if status is empty",
 			dto: service.ParticipantServiceDTO{
-				ID:      createid.CreateID(),
 				UserID:  "defb7588-55ed-45ea-a3ad-af1fcb37fb2a",
 				EventID: "4cf68d55-aa88-48f1-b2ed-67873669a168",
 			},

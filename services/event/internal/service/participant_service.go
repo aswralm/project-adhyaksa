@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	createid "project-adhyaksa/pkg/create-id"
 	"project-adhyaksa/services/event/domain/repository"
 	"project-adhyaksa/services/event/domain/service"
 	"project-adhyaksa/services/event/internal/service/mapping"
@@ -20,6 +21,8 @@ func (s *participantService) Create(participant service.ParticipantServiceDTO, c
 	if err != nil {
 		return err
 	}
+	entity.SetID(createid.CreateID())
+
 	if err := s.participantRepository.Create(entity, ctx); err != nil {
 		return err
 	}
