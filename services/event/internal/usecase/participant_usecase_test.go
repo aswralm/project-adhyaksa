@@ -2,6 +2,7 @@ package usecase_test
 
 import (
 	"context"
+	"project-adhyaksa/services/event/domain/service"
 	usecases "project-adhyaksa/services/event/domain/usecase"
 	valueobject "project-adhyaksa/services/event/domain/value_object"
 	mocks "project-adhyaksa/services/event/internal/service/mock"
@@ -14,6 +15,7 @@ import (
 
 var (
 	participantService = new(mocks.ParticipantServiceMock)
+	//eventService       = new(mocks.EventServiceMock)
 )
 
 func TestParticipantServiceCreate(t *testing.T) {
@@ -39,7 +41,10 @@ func TestParticipantServiceCreate(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			participantService.Mock.On("Create", mock.Anything, mock.Anything).Return(nil)
 
-			usecase := usecase.NewParticipantUseCase(participantService)
+			eventDTO := &service.EventServiceDTO{}
+			eventService.Mock.On("GetByID", mock.Anything, mock.Anything).Return(eventDTO, nil)
+
+			usecase := usecase.NewParticipantUseCase(participantService, eventService)
 
 			ctx := context.TODO()
 			err := usecase.ConfirmEvent(testCase.dto, ctx)
