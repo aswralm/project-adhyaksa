@@ -3,6 +3,8 @@ package service_test
 import (
 	"context"
 	"errors"
+	"project-adhyaksa/pkg/pagination"
+	queryfilter "project-adhyaksa/services/event/domain/query_filter"
 	"project-adhyaksa/services/event/domain/service"
 	"project-adhyaksa/services/event/internal/customerror"
 	mocks "project-adhyaksa/services/event/internal/repository/mock"
@@ -89,6 +91,44 @@ func TestEventServiceCreate(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
+		})
+	}
+}
+
+func TestEventService_GetListPaginated(t *testing.T) {
+	testCases := []struct {
+		name     string
+		pagin    *pagination.Paginator
+		filter   *queryfilter.GetEventQueryFilter
+		expected []service.EventServiceDTO
+		isError  bool
+	}{
+		{
+			name: "positive case",
+			pagin: &pagination.Paginator{
+				Limit:  10,
+				Offset: 0,
+			},
+			filter:   &queryfilter.GetEventQueryFilter{},
+			expected: []service.EventServiceDTO{},
+			isError:  false,
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			eventService := services.NewEventService(eventRepo)
+			eventRepo.Mock.On("GetListPaginated", testCase.pagin, testCase.filter).Return(nil, nil)
+			res, err := eventService.GetListPaginated(testCase.pagin, testCase.filter)
+
+			if testCase.isError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, testCase.expected, res)
+			}
+
+			eventRepo.Mock.AssertExpectations(t)
 		})
 	}
 }

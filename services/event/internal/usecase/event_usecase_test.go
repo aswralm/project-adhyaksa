@@ -2,6 +2,8 @@ package usecase_test
 
 import (
 	"context"
+	"project-adhyaksa/pkg/pagination"
+	queryfilter "project-adhyaksa/services/event/domain/query_filter"
 	"project-adhyaksa/services/event/domain/usecase"
 	mocks "project-adhyaksa/services/event/internal/service/mock"
 	usecases "project-adhyaksa/services/event/internal/usecase"
@@ -56,6 +58,44 @@ func TestEventUseCaseCreate(t *testing.T) {
 				assert.Equal(t, testCase.expected, err)
 			} else {
 				assert.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestEventUseCase_GetListPaginated(t *testing.T) {
+	testCases := []struct {
+		name     string
+		pagin    *pagination.Paginator
+		filter   *queryfilter.GetEventQueryFilter
+		expected []usecase.EventUseCaseDTO
+		isError  bool
+	}{
+		{
+			name: "positive case",
+			pagin: &pagination.Paginator{
+				Limit:  10,
+				Offset: 0,
+			},
+			filter:   &queryfilter.GetEventQueryFilter{},
+			expected: []usecase.EventUseCaseDTO{},
+			isError:  false,
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			eventService.Mock.On("GetListPaginated", mock.Anything, mock.Anything).Return([]usecase.EventUseCaseDTO{}, nil)
+
+			useCase := usecases.NewEventUseCase(eventService)
+
+			result, err := useCase.GetListPaginated(testCase.pagin, testCase.filter)
+
+			if testCase.isError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, testCase.expected, result)
 			}
 		})
 	}
