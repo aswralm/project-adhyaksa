@@ -8,6 +8,7 @@ type EventQueryPaginated struct {
 	Limit     int    `form:"limit"`
 	Page      int    `form:"page"`
 	NextEvent bool   `form:"nextEvent"`
+	Order     string `form:"order"`
 	OrderBy   string `form:"orderBy"`
 }
 

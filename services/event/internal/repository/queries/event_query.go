@@ -75,7 +75,7 @@ func GetListEventFilterGORM(pagin *pagination.Paginator,
 		}
 
 		if filter.OrderBy != "" {
-			db = db.Order(filter.OrderBy)
+			db = db.Order(fmt.Sprintf("%s %s", filter.Order, filter.OrderBy))
 		}
 
 		if filter.Limit > 0 {
