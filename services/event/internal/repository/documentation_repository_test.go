@@ -2,7 +2,6 @@ package repository_test
 
 import (
 	"context"
-	createid "project-adhyaksa/pkg/create-id"
 	"project-adhyaksa/services/event/domain/entity"
 	"project-adhyaksa/services/event/internal/repository"
 	"project-adhyaksa/services/event/internal/repository/model"
@@ -16,8 +15,8 @@ func TestDocumentationRepositoryCreate(t *testing.T) {
 	config := SetupTest()
 
 	var refresh = make(map[string]interface{})
-	refresh[model.Documentation{}.GetTableName()] = model.Documentation{}
 	refresh[model.Photo{}.GetTableName()] = model.Photo{}
+	refresh[model.Documentation{}.GetTableName()] = model.Documentation{}
 	refresh[model.Documentation{}.GetTableName()] = model.Documentation{}
 	refresh[model.Branch{}.GetTableName()] = model.Branch{}
 
@@ -40,21 +39,22 @@ func TestDocumentationRepositoryCreate(t *testing.T) {
 		})
 	)
 
-	photo, _ := entity.NewPhoto(entity.PhotoDTO{
-		ID:       "4cf68d55-aa88-48f1-b2ed-67873669a122",
-		PublicID: "image_public_id",
-		URL:      "www.image.gratis.test",
-		Name:     "image-test.jpg",
-	})
-
 	documentationPositiveCase, _ := entity.NewDocumentation(entity.DocumentationDTO{
-		ID:          createid.CreateID(),
+		ID:          "4cf68d55-aa88-48f1-b2ed-67873669a771",
 		Name:        "documentation test",
 		AdminID:     "test12",
 		Date:        &date,
 		Location:    "jakarta",
 		Description: "event test",
 		Branch:      branchPositiveCase,
+	})
+
+	photo, _ := entity.NewPhoto(entity.PhotoDTO{
+		ID:            "4cf68d55-aa88-48f1-b2ed-67873669a122",
+		PublicID:      "image_public_id",
+		URL:           "www.image.gratis.test",
+		Name:          "image-test.jpg",
+		Documentation: documentationPositiveCase,
 	})
 
 	testCases := []struct {
